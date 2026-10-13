@@ -784,6 +784,10 @@
       "open3dAria": "Open the {{name}} 3D model",
       "priceOnRequest": "Price on request"
     },
+    "activity": {
+      "proforma": "A clinic requested a proforma for {{device}}",
+      "lease": "A clinic requested a lease quote for {{device}}"
+    },
     "rfq": {
       "specialty": {
         "dermatology": "Dermatology",

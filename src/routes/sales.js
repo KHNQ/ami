@@ -102,6 +102,17 @@ salesRoutes.get("/quotes/:id/proforma.pdf", downloadLimiter, (c) => {
 });
 
 /**
+ * The storefront's "live activity" feed: real recent proforma requests, reduced to
+ * device + time (see salesService.recentActivity). Public and anonymous, so it has
+ * its own modest budget -- it is polled by every open storefront tab.
+ */
+const activityLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, keyPrefix: "sales:activity" });
+salesRoutes.get("/activity", activityLimiter, (c) => {
+  c.header("Cache-Control", "public, max-age=30");
+  return c.json(salesService.recentActivity());
+});
+
+/**
  * A customer's own quotes and agreements.
  *
  * Scoped to the caller by userId rather than taking one as a parameter --

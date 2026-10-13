@@ -337,6 +337,39 @@ export const salesService = {
     return quote;
   },
 
+  /**
+   * What the storefront's "live activity" pop-up shows: real, recent proforma and
+   * lease requests, reduced to the device and the time.
+   *
+   * Deliberately NOT the quote row. The endpoint is public, and a quote carries a
+   * name, a phone, an email and free-text fields a visitor typed -- all of which
+   * would otherwise be one query away from every stranger on the internet, and
+   * anyone could plant text of their choosing on other visitors' screens. The
+   * device name comes from the catalogue row, not from anything typed, and the
+   * only thing taken from the request itself is when it arrived.
+   *
+   * Switched off, it returns nothing at all (not merely "hidden by the UI"): the
+   * flag is enforced here so curl sees exactly what the browser would.
+   *
+   * A declined request is left out, which doubles as the moderation lever -- junk
+   * submitted to the public form is declined in the queue and vanishes from here.
+   */
+  recentActivity({ limit = 8, withinDays = 14 } = {}) {
+    if (!settingsService.isEnabled("show_live_activity")) return { enabled: false, events: [] };
+    const cutoff = new Date(Date.now() - withinDays * 86_400_000).toISOString();
+    const events = [];
+    for (const q of db.salesQuotes.list({ limit: 200 })) {
+      if (!["proforma", "lease"].includes(q.kind)) continue;
+      if (!q.product_id || ["declined", "expired"].includes(q.status)) continue;
+      if (q.created_at < cutoff) continue;
+      const product = db.products.get(q.product_id);
+      if (!product) continue;
+      events.push({ kind: q.kind, device: product.name, at: q.created_at });
+    }
+    events.sort((a, b) => (a.at < b.at ? 1 : -1));
+    return { enabled: true, events: events.slice(0, limit) };
+  },
+
   getQuote(id) {
     return describeQuote(this.getQuoteRow(id));
   },

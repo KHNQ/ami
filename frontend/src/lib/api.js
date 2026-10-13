@@ -107,6 +107,10 @@ export const api = {
   // details to show when they are off. Public, so no token is needed.
   siteConfig: () => request("/site-config", { auth: false }),
 
+  // Real, recent proforma requests reduced to device + time, for the storefront's
+  // live-activity pop-up. Empty unless an admin has switched the feature on.
+  recentActivity: () => request("/sales/activity", { auth: false }),
+
   // blog + socials -- public, no token needed
   listPosts: (query) => request("/blog/posts", { method: "GET", query, auth: false }),
   getPost: (slug) => request(`/blog/posts/${slug}`, { method: "GET", auth: false }),

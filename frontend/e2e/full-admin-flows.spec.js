@@ -290,6 +290,26 @@ test.describe("content and settings", () => {
     spy.check();
   });
 
+  test("settings: the live-activity switch is off by default and publishes real requests -- device and time only -- when turned on", async () => {
+    await open("/settings", /Admin · Settings/);
+    const sw = page.getByRole("switch", { name: "Live proforma activity" });
+    await expect(sw).toHaveAttribute("aria-checked", "false");
+    expect((await apiGet("/sales/activity")).body).toEqual({ enabled: false, events: [] });
+
+    await sw.click();
+    await page.getByRole("button", { name: /^Save 1/ }).click();
+    await expect.poll(async () => (await apiGet("/sales/activity")).body.enabled).toBe(true);
+    const feed = (await apiGet("/sales/activity")).body;
+    expect(feed.events.length).toBeGreaterThan(0); // the world's real proformas
+    expect(feed.events.every((e) => Object.keys(e).sort().join() === "at,device,kind")).toBe(true);
+    expect(JSON.stringify(feed)).not.toMatch(/Anon Clinic|Lease Clinic|@clinic\.test|\+98 912/);
+
+    // Switch it back off again from the same screen.
+    await page.getByRole("button", { name: "Revert Live proforma activity" }).click();
+    await expect.poll(async () => (await apiGet("/sales/activity")).body.enabled).toBe(false);
+    spy.check();
+  });
+
   test("the overview's scheduled jobs can be run by hand", async () => {
     await open("/", /Control Room/);
     await page.getByRole("button", { name: "Run" }).first().click();

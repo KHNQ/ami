@@ -793,6 +793,10 @@
       "open3dAria": "افتح المجسّم ثلاثي الأبعاد لـ {{name}}",
       "priceOnRequest": "السعر بالاستعلام"
     },
+    "activity": {
+      "proforma": "طلبت عيادة فاتورة مبدئية لجهاز {{device}}",
+      "lease": "طلبت عيادة عرض تأجير تمويلي لجهاز {{device}}"
+    },
     "rfq": {
       "specialty": {
         "dermatology": "الجلدية",

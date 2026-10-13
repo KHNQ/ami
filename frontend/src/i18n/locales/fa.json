@@ -789,6 +789,10 @@
       "open3dAria": "باز کردن مدل سه‌بعدی {{name}}",
       "priceOnRequest": "قیمت استعلامی"
     },
+    "activity": {
+      "proforma": "یک کلینیک پیش‌فاکتور {{device}} را درخواست کرد",
+      "lease": "یک کلینیک پیشنهاد اجاره (لیزینگ) {{device}} را درخواست کرد"
+    },
     "rfq": {
       "specialty": {
         "dermatology": "پوست و مو",

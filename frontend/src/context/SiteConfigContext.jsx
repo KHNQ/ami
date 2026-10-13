@@ -18,6 +18,9 @@ const DEFAULTS = {
   show_prices: true,
   signup_enabled: true,
   support_tickets_enabled: true,
+  // Defaults CLOSED, like the assistant: it publishes customers' activity, so it
+  // is opt-in and nothing should flash on screen before the server says it is on.
+  show_live_activity: false,
   ai_chat_enabled: false,
 };
 

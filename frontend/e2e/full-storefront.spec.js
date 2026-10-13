@@ -365,6 +365,33 @@ test.describe("buying online", () => {
   });
 });
 
+test.describe("the live-activity pop-up shows real requests, only when an admin turns it on", () => {
+  test("absent by default; on, it shows a real proforma request without any personal detail; off again, it goes away", async ({ page }) => {
+    const spy = watch(page);
+    const flag = (value) => apiSend("PATCH", "/admin/settings", { show_live_activity: value }, w.root.token);
+    try {
+      await visit(page, "/devices", /All devices/);
+      await expect(page.getByTestId("live-activity")).toHaveCount(0); // off: nothing is rendered at all
+
+      expect((await flag(true)).status).toBe(200);
+      // The flag reaches this already-open page over the live config stream -- no reload.
+      const popup = page.getByTestId("live-activity");
+      await expect(popup).toHaveCount(1, { timeout: 20_000 });
+      await expect(popup).toContainText(/A clinic requested (a proforma|a lease quote) for (E2E Laser|E2E Scanner)/, { timeout: 20_000 });
+      const shown = await popup.innerText();
+      for (const private_ of ["Anon Clinic", "Lease Clinic", "E2E User", "anon@clinic.test", "+98 912", "Tehran"]) {
+        expect(shown, `the pop-up must not show "${private_}"`).not.toContain(private_);
+      }
+
+      expect((await flag(false)).status).toBe(200);
+      await expect(page.getByTestId("live-activity")).toHaveCount(0, { timeout: 20_000 });
+    } finally {
+      await flag(false);
+    }
+    spy.check();
+  });
+});
+
 test.describe("language, direction and theme", () => {
   test("switching to Persian flips the page to right-to-left without errors, and back to English", async ({ page }) => {
     const spy = watch(page);

@@ -56,6 +56,14 @@ export const SETTING_DEFINITIONS = {
     label: "Support requests",
     description: "When off, the contact / support request form is closed and POST /support/requests is refused.",
   },
+  show_live_activity: {
+    type: BOOLEAN,
+    default: false,
+    public: true,
+    label: "Live proforma activity",
+    description:
+      "When on, the storefront shows a small pop-up of REAL recent proforma and lease requests (\"A clinic requested a proforma for <device> · 2 min ago\"). Only the device and the time are shown -- never a name, phone, email or city. A request you decline disappears from it. Off by default.",
+  },
   ai_chat_enabled: {
     type: BOOLEAN,
     default: true,
