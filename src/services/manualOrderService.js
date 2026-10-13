@@ -110,8 +110,27 @@ export const manualOrderService = {
       // and the person at the counter needs to be told that, in money.
       if (err instanceof AppError && err.code === "invariant1_violation" && agreedPriceCents != null) {
         const usd = (cents) => `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+        // Name the cost and the gap. Nothing changed between the proforma and
+        // this attempt -- the two figures were simply never reconciled -- and
+        // the counter needs to see that to know which one to correct.
+        const product = db.products.get(productId);
+        const costCents = product?.current_x_cents;
+        const isPlaceholder = product ? Boolean(JSON.parse(product.specs_json).placeholder_pricing) : false;
+        const marginCents = err.details?.marginCents;
+        const detail =
+          costCents == null || marginCents == null
+            ? "leaves too little margin over this device's recorded cost."
+            : `${
+                marginCents < 0
+                  ? `is ${usd(-marginCents)} BELOW`
+                  : `is only ${usd(marginCents)} above`
+              } this device's recorded cost of ${usd(costCents)} ` +
+              `(the minimum margin is ${usd(err.details?.minMarginThresholdCents ?? 0)}).`;
         throw Errors.unprocessable(
-          `The proforma price (${usd(agreedPriceCents)}) leaves too little margin over this device's recorded cost. ` +
+          `The proforma price (${usd(agreedPriceCents)}) ${detail} ` +
+            (isPlaceholder
+              ? `That cost is still a placeholder from the catalogue import. `
+              : ``) +
             `Check the device's cost on its product page -- if it is a placeholder, set the real figure -- then record the sale again.`,
           "quote_price_below_margin",
           err.details

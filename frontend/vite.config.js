@@ -196,7 +196,9 @@ export default defineConfig(({ mode, isSsrBuild }) => {
         // the dev machine, so `localhost` is always the right target no
         // matter which host the browser used to reach Vite.
         "^/products/[^/]+/image$": {
-          target: `http://localhost:${env.VITE_API_PORT || "3000"}`,
+          // A backend on another machine (VITE_API_BASE_URL set, e.g. by
+          // bootFrontend.sh) is proxied to directly; otherwise it is local.
+          target: env.VITE_API_BASE_URL ? apiOrigin : `http://localhost:${env.VITE_API_PORT || "3000"}`,
           changeOrigin: true,
         },
       },

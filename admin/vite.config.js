@@ -77,7 +77,9 @@ export default defineConfig({
       // Cheque scans and product images are served by the API as raw bytes.
       // Proxying them keeps them same-origin in dev, matching production.
       "^/(products|cheques)/[^/]+/image$": {
-        target: `http://localhost:${process.env.VITE_API_PORT || 3000}`,
+        // A backend on another machine (VITE_API_BASE_URL set, e.g. by
+        // bootAdmin.sh) is proxied to directly; otherwise it is local.
+        target: process.env.VITE_API_BASE_URL || `http://localhost:${process.env.VITE_API_PORT || 3000}`,
         changeOrigin: true,
       },
     },

@@ -116,6 +116,9 @@ describe("registering a walk-in sale from a proforma", () => {
     expect(res.status).toBe(422);
     expect(res.body.error.code).toBe("quote_price_below_margin");
     expect(res.body.error.message).toContain("$40,000.00");
+    // States the recorded cost and the shortfall, not just "too little margin".
+    expect(res.body.error.message).toContain("$90,000.00");
+    expect(res.body.error.message).toContain("$50,000.00 BELOW");
     expect(db.salesQuotes.get(quote.id).status).toBe("new");
   });
 

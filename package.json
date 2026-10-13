@@ -18,6 +18,7 @@
     "content:fetch": "bun run scripts/fetch-site-content.js",
     "content:generate": "bun run scripts/generate-frontend-content.js",
     "content:import": "bun run scripts/import-ashkan-medical-content.js",
+    "pricing:devices": "bun run scripts/set-device-pricing.js",
     "crawl": "bun run scripts/crawl-site.js"
   },
   "dependencies": {
