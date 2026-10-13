@@ -1,0 +1,37 @@
+User-agent: *
+
+# Public, and the pages we want found.
+Allow: /
+Allow: /devices
+Allow: /devices/
+Allow: /catalog
+Allow: /installations
+Allow: /affiliate
+Allow: /tools
+Allow: /blog
+Allow: /contact
+Allow: /products/
+Allow: /c/
+Allow: /partners
+Allow: /our-story
+Allow: /careers
+
+# Authenticated, user-specific, or transactional. Zero SEO value, and no
+# reason to spend crawl budget on pages that will only ever return a login
+# redirect.
+Disallow: /wallet
+Disallow: /network
+Disallow: /orders
+Disallow: /support
+Disallow: /profile
+Disallow: /admin
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+# A comparison is a per-visitor selection held in localStorage, so every
+# crawl of it returns the same empty state -- nothing worth indexing.
+Disallow: /compare
+Disallow: /account
+
+Sitemap: /sitemap.xml

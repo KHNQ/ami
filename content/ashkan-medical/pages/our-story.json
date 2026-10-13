@@ -1,0 +1,48 @@
+{
+  "source": "https://ashkan-medical.com/en/our-story/",
+  "crawled_at": "2026-08-31",
+  "title": "Our story",
+  "tagline": "Every success begins with an idea in a person's mind.",
+  "banner": {
+    "source_url": "https://ashkan-medical.com/wp-content/uploads/2025/07/ashkan-medical.webp",
+    "local_path": "content/ashkan-medical/banners/our-story.webp"
+  },
+  "sections": [
+    {
+      "id": "origin",
+      "heading": "Ideals are rooted in ideas",
+      "body": "The company began by providing advanced surgical laser and radiofrequency technologies to Iranian physicians. Today those devices operate in hospitals, clinics and wellness centres across the country."
+    },
+    {
+      "id": "mission",
+      "heading": "Our mission",
+      "body": "We consider it our mission to believe in teamwork and to rely on our loyal, committed and responsible human capital. We aim to offer physician-guided products that enable medical information to be shared globally and healthcare to advance."
+    },
+    {
+      "id": "vision",
+      "heading": "Our vision",
+      "body": "We strive to maintain our customers' trust and to provide consultation on world-renowned brands, positioning ourselves as a reference for proper consultation and for choosing the best available option."
+    },
+    {
+      "id": "values",
+      "heading": "Our values",
+      "body": "Ashkan Medical Idea is committed to delivering innovative healthcare solutions and to promoting national healthcare culture through cutting-edge medical technologies."
+    }
+  ],
+  "proof_point": "More than 90% of the doctors and specialists who have engaged with us have returned for the latest technologies after purchasing their first treatment centre.",
+  "ceo": {
+    "name": "Ashkan Eghbal Ahmadi",
+    "role": "Chief Executive Officer",
+    "statement": "Organizational health, expertise, customer satisfaction and innovation have been the core operating principles across two decades in medical equipment.",
+    "image": {
+      "source_url": "https://ashkan-medical.com/wp-content/uploads/2021/12/Ashkan-min.jpg",
+      "local_path": "content/ashkan-medical/banners/ceo.jpg"
+    }
+  },
+  "stats": [
+    { "value": "20+", "label": "Years operating" },
+    { "value": "12", "label": "Exclusive brand partnerships" },
+    { "value": "90%", "label": "Of clients return for their next device" },
+    { "value": "55+", "label": "Countries our partners ship to" }
+  ]
+}

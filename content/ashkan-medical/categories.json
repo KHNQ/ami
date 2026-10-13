@@ -1,0 +1,77 @@
+{
+  "source": "https://ashkan-medical.com/en/",
+  "crawled_at": "2026-08-31",
+  "note": "Seven product categories as published on the source site. `eximer` is NOT a category there -- the Exciplex excimer device sits under ENT/phototherapy. Product membership is many-to-many: 4plus and InBody each appear under more than one category on the live site.",
+  "categories": [
+    {
+      "slug": "remove-excess-hair",
+      "title": "Removal of excess hair",
+      "short_title": "Hair removal",
+      "source_url": "https://ashkan-medical.com/en/product-category/remove-excess-hair/",
+      "intro": "Medical equipment for hair removal has always been of great importance for doctors and specialists. Ashkan Medical Idea has introduced the best laser hair removal device for the treatment of hair loss and equipped beauty clinics.",
+      "body": "It is possible to buy laser hair removal devices from world-class companies with Ashkan Medical Idea as the official and exclusive representative of international medical equipment companies. Our sales experts offer the best choice according to your field and level of activity.",
+      "effect": "hair-removal",
+      "product_slugs": ["prime-lase", "elysion-pro"]
+    },
+    {
+      "slug": "rejuvenation",
+      "title": "Skin and hair rejuvenation",
+      "short_title": "Rejuvenation",
+      "source_url": "https://ashkan-medical.com/en/product-category/rejuvenation/",
+      "intro": "Ashkan Medical Equipment Company has always tried to provide the best brands in the field of skin and rejuvenation during its two decades of activity.",
+      "body": "Over half of the beauty, skin and hair clinics in the country use our equipment. Products are imported using scientific methods and carry international CE and FDA certification. The range spans fractional CO2 laser with smart pulse technology, dynamic quadrupole radiofrequency, micro-needle radiofrequency, and portable excimer systems for localized treatment.",
+      "effect": "rejuvenation",
+      "product_slugs": ["angela", "ashley", "4plus", "exciplex"]
+    },
+    {
+      "slug": "slimming-and-fitness",
+      "title": "Slimming and fitness",
+      "short_title": "Slimming",
+      "source_url": "https://ashkan-medical.com/en/product-category/slimming-and-fitness/",
+      "intro": "Ashkan Medical Equipment Company is one of the largest and best suppliers in the field of slimming, cellulite removal and body analyzer medical equipment in Iran.",
+      "body": "With over two decades of experience, we are committed to providing the best slimming and fitness medical equipment according to world standards, with consultation throughout. The range covers RF, cryolipolysis, laser and magnetic-field technologies for body contouring and muscle building.",
+      "effect": "slimming",
+      "product_slugs": ["cooltech-cooltech-define", "powershape2", "4plus", "tesla-former", "inbody"]
+    },
+    {
+      "slug": "tattoo-removal",
+      "title": "Tattoo removal",
+      "short_title": "Tattoo removal",
+      "source_url": "https://ashkan-medical.com/en/product-category/tattoo-removal-en/",
+      "intro": "Tattoo removal machines and advanced medical equipment for tattoo removal have been produced and invented. Ashkan Medical Idea has provided the best technologies in this field.",
+      "body": "Picosecond and Q-switched platforms shatter tattoo ink into particles small enough for the body to clear naturally, across a range of ink colours and depths.",
+      "effect": "tattoo-removal",
+      "product_slugs": ["pico-premium", "q10"]
+    },
+    {
+      "slug": "body-analysis",
+      "title": "Body analysis",
+      "short_title": "Body analysis",
+      "source_url": "https://ashkan-medical.com/en/product-category/body-analysis/",
+      "intro": "Ashkan Medical Equipment is the exclusive representative of the best body analyzer in the world, InBody, as the most accurate device for measuring BMI and body composition.",
+      "body": "Analysis results no longer depend on experimental estimates. Parameters such as gender and age do not affect the measurement results -- the device measures directly rather than inferring from population averages.",
+      "effect": "body-analysis",
+      "product_slugs": ["inbody"]
+    },
+    {
+      "slug": "vascular-surgery",
+      "title": "Vascular surgery",
+      "short_title": "Vascular",
+      "source_url": "https://ashkan-medical.com/en/product-category/vascular-surgery/",
+      "intro": "Vascular and heart surgery medical equipment is used to treat vascular lesions in medical centers and clinics.",
+      "body": "Ashkan Medical Idea is the exclusive representative of A.R.C Laser, which produces laser technologies covering everything from complex eye surgery to nail fungus. The 1470nm diode platform is used for lower-limb vascular lesions.",
+      "effect": "vascular",
+      "product_slugs": ["wolf"]
+    },
+    {
+      "slug": "ear-nose-and-throat",
+      "title": "Ear, nose and throat",
+      "short_title": "ENT",
+      "source_url": "https://ashkan-medical.com/en/product-category/ear-nose-and-throat/",
+      "intro": "Ear, nose and throat medical equipment requires high precision and accuracy.",
+      "body": "Ashkan Medical Idea is the exclusive representative of A.R.C Laser, whose ENT range includes 4 MHz radiofrequency surgical incision, 1470nm and 980nm diode platforms, multi-fibre laser systems supporting 300, 400 and 600 micron fibres, and CO2 micromanipulator accessories for operating distances of 225-500mm.",
+      "effect": "ent",
+      "product_slugs": ["wolf", "exciplex"]
+    }
+  ]
+}

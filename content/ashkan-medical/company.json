@@ -1,0 +1,58 @@
+{
+  "source": "https://ashkan-medical.com/en/",
+  "crawled_at": "2026-08-25",
+  "name": "Ashkan Medical Idea",
+  "tagline": "The largest importer of medical equipment in the country",
+  "description": "Operating for over two decades, Ashkan Medical Idea positions itself as one of the best medical equipment companies in Iran, offering laser technology, IPL devices, slimming systems, and body analyzers. It is the exclusive representative of several international medical device manufacturers.",
+  "logo": {
+    "source_url": "https://ashkan-medical.com/wp-content/uploads/2025/07/ashkan-medical.webp",
+    "local_path": "content/ashkan-medical/logo.webp"
+  },
+  "services": [
+    {
+      "name": "Hair Removal",
+      "description": "The best and newest hair removal lasers."
+    },
+    {
+      "name": "Skin Rejuvenation",
+      "description": "Equipment for dermatologists and beauticians."
+    },
+    {
+      "name": "Body Analysis",
+      "description": "Analyze in your office without relying on estimates."
+    },
+    {
+      "name": "Tattoo Removal",
+      "description": "The most advanced tattoo removal machines."
+    },
+    {
+      "name": "Vascular Surgery",
+      "description": "Medical equipment for vascular procedures."
+    },
+    {
+      "name": "Otorhinolaryngology (ENT)",
+      "description": "Medical equipment for ear, nose and throat."
+    },
+    {
+      "name": "Slimming & Fitness",
+      "description": "Equipment needed for a slimming and fitness clinic."
+    }
+  ],
+  "brand_partners": [
+    "IDS", "InBody", "Classys", "Eunsung", "Iskra Medical", "NOVAVision",
+    "A.R.C Laser", "Clarteis", "Cocoon Medical", "Loktal", "Erchonia"
+  ],
+  "navigation": [
+    { "label": "Shop", "path": "/en/shop/" },
+    { "label": "Our Story", "path": "/en/our-story/" },
+    { "label": "Social Responsibilities", "path": "/en/social-responsibilities/" },
+    { "label": "Business Partners", "path": "/en/business-partners/" },
+    { "label": "Contact Us", "path": "/en/contact-us/" },
+    { "label": "Career Opportunities", "path": "/en/career-opportunities/" }
+  ],
+  "contact": {
+    "phones": ["+982188665828", "021-45242", "021-88653893"],
+    "email": "info@ashkan-medical.com",
+    "address": "Tehran, Vanak Square, Molla Sadra St., Pardis St., No. 14, 4th floor, Units 17-18"
+  }
+}

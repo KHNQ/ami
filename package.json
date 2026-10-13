@@ -1,0 +1,29 @@
+{
+  "name": "trex-backend",
+  "version": "1.0.0",
+  "description": "Trex multi-space MLM platform backend (Bun + Hono + swappable DB layer)",
+  "module": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --hot src/index.js",
+    "start": "bun run src/index.js",
+    "migrate": "bun run scripts/migrate.js",
+    "seed": "bun run scripts/seed.js",
+    "backup": "bun run scripts/backup.js",
+    "check-invariants": "bun run scripts/check-invariants.js",
+    "test": "bun test tests/*.test.js",
+    "lint": "bun run lint:backend && bun run lint:frontend",
+    "lint:backend": "oxlint src scripts tests",
+    "lint:frontend": "cd frontend && bun run lint",
+    "content:fetch": "bun run scripts/fetch-site-content.js",
+    "content:generate": "bun run scripts/generate-frontend-content.js",
+    "content:import": "bun run scripts/import-ashkan-medical-content.js",
+    "crawl": "bun run scripts/crawl-site.js"
+  },
+  "dependencies": {
+    "hono": "^4.6.14"
+  },
+  "devDependencies": {
+    "oxlint": "^1.78.0"
+  }
+}

@@ -1,0 +1,7 @@
+node_modules
+dist
+dist-ssr
+e2e/.tmp
+test-results
+playwright-report
+.git

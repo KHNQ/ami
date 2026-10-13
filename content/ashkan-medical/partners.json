@@ -1,0 +1,159 @@
+{
+  "source": "https://ashkan-medical.com/en/business-partners/",
+  "crawled_at": "2026-08-31",
+  "hero": "Cooperation with the largest companies producing medical equipment and providing world-class services is one of our honors",
+  "note": "Coordinates are the manufacturer's headquarters city, added here (not on the source site) so the home page map can place each partner. Tehran is the company's own office and is the arc origin.",
+  "origin": {
+    "name": "Ashkan Medical Idea",
+    "city": "Tehran",
+    "country": "Iran",
+    "lat": 35.7575,
+    "lng": 51.4103
+  },
+  "partners": [
+    {
+      "slug": "arc-laser",
+      "name": "A.R.C Laser",
+      "country": "Germany",
+      "city": "Nuremberg",
+      "lat": 49.4521,
+      "lng": 11.0767,
+      "founded": 1978,
+      "description": "Over 35 years specializing in CO2, diode and KTP lasers for surgery, ENT, endoscopy and dermatology. Founded in 1978; A.R.C. Laser GmbH established in 1996. CE Medical certified.",
+      "website": "https://www.arclaser.de/",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/arclogo.png"
+    },
+    {
+      "slug": "classys",
+      "name": "CLASSYS",
+      "country": "South Korea",
+      "city": "Seoul",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "founded": 2007,
+      "description": "Founded in 2007, focused on innovative beauty medical technologies with a global customer base.",
+      "website": "https://classys.com/",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/classys.png"
+    },
+    {
+      "slug": "cocoon-medical",
+      "name": "Cocoon Medical",
+      "country": "Spain",
+      "city": "Barcelona",
+      "lat": 41.3874,
+      "lng": 2.1686,
+      "founded": 2010,
+      "description": "Established in Barcelona in 2010. Pioneer in body contouring, hair removal and skin rejuvenation, exporting to more than 60 countries. CE Medical certified.",
+      "website": "http://www.cocoonmedical.com/",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/elementor/thumbs/cocoon-qkxm9tgq5ivj81wj4vsod3xd1j42zxtsbyj0lnuw7o.png"
+    },
+    {
+      "slug": "erchonia",
+      "name": "Erchonia",
+      "country": "United States",
+      "city": "McKinney, Texas",
+      "lat": 33.1972,
+      "lng": -96.6398,
+      "founded": 1996,
+      "description": "More than 20 years of experience. Founded in 1996, making low-level laser devices for body contouring. FDA approved.",
+      "website": "https://www.erchonia.com/",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/erchonia.png"
+    },
+    {
+      "slug": "eunsung",
+      "name": "Eunsung",
+      "country": "South Korea",
+      "city": "Seoul",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "founded": 1995,
+      "description": "Founded in 1995, making beauty, slimming and fitness medical equipment. CE Medical, ISO 9001 and ISO 13485 certified.",
+      "website": null,
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/eunsung.png"
+    },
+    {
+      "slug": "ids",
+      "name": "IDS",
+      "country": "South Korea",
+      "city": "Seoul",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "founded": null,
+      "description": "More than 30 years as a top manufacturer of CO2 fractional lasers and RF rejuvenation systems, distributed to over 45 countries. Meets CE Medical and FDA standards.",
+      "website": "http://www.ids.co.kr/",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/idslogo.png"
+    },
+    {
+      "slug": "inbody",
+      "name": "InBody",
+      "country": "South Korea",
+      "city": "Seoul",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "founded": 1996,
+      "description": "More than 25 years in body composition analysis, and the first company to develop such devices, in 1996. FDA approved and ISO 81060-2:2018 certified.",
+      "website": "http://www.inbody.com",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/inbodylogo.png"
+    },
+    {
+      "slug": "iskra-medical",
+      "name": "Iskra Medical",
+      "country": "Slovenia",
+      "city": "Ljubljana",
+      "lat": 46.0569,
+      "lng": 14.5058,
+      "founded": null,
+      "description": "Magnetic field and muscle stimulation technologies for slimming and physiotherapy. ISO 9001, ISO 13485 and CE Medical certified.",
+      "website": "http://www.iskramedical.eu/en/",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/iskramedical.png"
+    },
+    {
+      "slug": "loktal",
+      "name": "Loktal",
+      "country": "France",
+      "city": "Sophia Antipolis",
+      "lat": 43.6167,
+      "lng": 7.05,
+      "founded": null,
+      "description": "Headquartered in Sophia Antipolis and ISO 13485 certified. Its Exciplex device is recognised in more than 40 countries.",
+      "website": "https://www.loktal.com/",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/loktallogo.png"
+    },
+    {
+      "slug": "sinclair",
+      "name": "Sinclair",
+      "country": "United Kingdom",
+      "city": "London",
+      "lat": 51.5072,
+      "lng": -0.1276,
+      "founded": 1971,
+      "description": "Founded in 1971, a global medical aesthetics company selling in 55 countries. Acquired by Huadong Medicine Ltd in 2018.",
+      "website": "https://www.sinclair.com/",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/sinclair-2022-logo.svg"
+    },
+    {
+      "slug": "clarteis",
+      "name": "Clarteis",
+      "country": "France",
+      "city": "Sophia Antipolis",
+      "lat": 43.6167,
+      "lng": 7.05,
+      "founded": null,
+      "description": "Based in Sophia Antipolis, making advanced RF technology for surgery, cosmetics, dentistry and veterinary use. CE Medical certified.",
+      "website": "http://www.clarteis.com",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/Clarteis-Logo-SVG.svg"
+    },
+    {
+      "slug": "novaclinical",
+      "name": "Novaclinical",
+      "country": "Italy",
+      "city": "Verona",
+      "lat": 45.4384,
+      "lng": 10.9916,
+      "founded": null,
+      "description": "Italian manufacturer of dynamic quadrupole radiofrequency systems for body contouring and skin rejuvenation.",
+      "website": "https://www.novaclinical.it/?lang=en",
+      "logo": "https://ashkan-medical.com/wp-content/uploads/2022/02/Nova-Clinical-Logo-SVG.svg"
+    }
+  ]
+}

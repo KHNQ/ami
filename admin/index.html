@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Control Room — Ashkan Medical Idea</title>
+    <script>
+      // Same pre-paint theme application as the storefront: read the stored
+      // preference before first paint so the page never flashes the wrong
+      // background. Shares the localStorage key, so a operator's choice
+      // carries across both apps on the same host.
+      try {
+        var t = localStorage.getItem("trex-theme");
+        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      } catch (e) {}
+    </script>
+      <!-- Generated from the storefront's brand mark by
+         frontend/scripts/make-favicon.mjs, so the two apps never drift. -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

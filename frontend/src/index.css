@@ -1,0 +1,1221 @@
+@import "tailwindcss";
+/* Typefaces, self-hosted.
+ *
+ * Each is its own @font-face set with unicode-range subsets, so a browser
+ * downloads only the faces a page actually uses: an English visitor never
+ * fetches a byte of Persian or Arabic type, and a Persian visitor does not
+ * download the Latin-extended subsets of a font they cannot see.
+ *
+ * Self-hosted rather than served from Google Fonts. The largest audience for
+ * the Persian and Arabic pages is in Iran, where third-party font CDNs are
+ * routinely slow or unreachable -- which is exactly how the site ended up
+ * rendering Persian in the system fallback, the "ugly font" this replaces.
+ * They are also cached by the service worker, so they work offline. */
+@import "@fontsource-variable/inter/index.css";
+@import "@fontsource-variable/vazirmatn/index.css";
+@import "@fontsource/ibm-plex-sans-arabic/400.css";
+@import "@fontsource/ibm-plex-sans-arabic/500.css";
+@import "@fontsource/ibm-plex-sans-arabic/600.css";
+@import "@fontsource/ibm-plex-sans-arabic/700.css";
+@plugin "tailwindcss-animate";
+
+/* shadcn components are written against a `dark:` variant. Tailwind v4's
+   default one keys off prefers-color-scheme, but this app has an explicit
+   theme toggle that writes data-theme="dark" onto <html> -- so without this
+   every `dark:` class in the library (and the handful in our own code) would
+   follow the OS instead of the switch the visitor actually pressed. */
+@custom-variant dark (&:is(:root[data-theme="dark"] *));
+
+/* --- shadcn theme -------------------------------------------------------
+ *
+ * shadcn's components are styled entirely through this fixed set of
+ * semantic names. Rather than pasting its default neutral palette in
+ * alongside ours -- which would give the app two competing sources of truth
+ * for "what colour is a card" -- every one of them is an alias onto the
+ * storefront tokens defined in @theme below.
+ *
+ * The practical effect: a shadcn <Button> is brand green, a <Card> is our
+ * panel colour, and both follow the light/dark switch for free, because the
+ * variables they point at already do. Nothing here introduces a new colour.
+ */
+:root {
+  --background: var(--color-canvas);
+  --foreground: var(--color-ink);
+  --card: var(--color-panel);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-panel);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-brand-green);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-panel-2);
+  --secondary-foreground: var(--color-ink);
+  --muted: var(--color-panel-2);
+  --muted-foreground: var(--color-ink-2);
+  --accent: var(--color-panel-2);
+  --accent-foreground: var(--color-ink);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: #ffffff;
+  --border: var(--color-line);
+  --input: var(--color-line);
+  --ring: var(--color-brand-green);
+  /* Pill-shaped controls are the storefront's signature -- see the note on
+     .b2b below. shadcn derives every corner from this one number, so setting
+     it here is what keeps its components looking like the rest of the page
+     instead of like stock shadcn. */
+  --radius: 0.875rem;
+  --chart-1: var(--color-brand-green);
+  --chart-2: var(--color-brand-blue);
+  --chart-3: var(--color-brand-teal);
+  --chart-4: oklch(0.769 0.188 70.08);
+  --chart-5: oklch(0.627 0.265 303.9);
+  --sidebar: var(--color-panel);
+  --sidebar-foreground: var(--color-ink);
+  --sidebar-primary: var(--color-brand-green);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--color-panel-2);
+  --sidebar-accent-foreground: var(--color-ink);
+  --sidebar-border: var(--color-line);
+  --sidebar-ring: var(--color-brand-green);
+}
+
+/* `inline` so these resolve to the aliases above at use time rather than
+   being frozen at their light-theme values -- which is what makes the whole
+   set flip when data-theme changes. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@theme {
+  /* One family per script, chosen for the language it sets:
+   *
+   *   Latin (en, fr, it)  Inter -- a neutral, clinical grotesque with a tall
+   *                       x-height and full Latin-extended coverage, so
+   *                       French and Italian diacritics are drawn by the same
+   *                       family as the English around them.
+   *   Persian (fa)        Vazirmatn -- a clean geometric sans with proper
+   *                       Persian numerals and no faux-Arabic digit shapes.
+   *   Arabic (ar)         IBM Plex Sans Arabic -- sharp, technical and
+   *                       professional, which suits a medical supplier.
+   *
+   * `--font-sans` is what the whole app reads; the locale rules below swap it.
+   * The named tokens exist so a component can ask for a specific one
+   * (`font-fa`, `font-ar`, `font-latin`), e.g. a model number that must stay
+   * in Latin letterforms inside a Persian sentence. */
+  --font-latin: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-fa: "Vazirmatn Variable", "Vazirmatn", "Inter Variable", Tahoma, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-ar: "IBM Plex Sans Arabic", "Inter Variable", "Segoe UI", Tahoma, "Geeza Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-latin);
+
+  /* Neutral scale -- values here are the LIGHT theme (the product default);
+     :root[data-theme="dark"] below inverts the whole scale, so every
+     bg-base-NNN card/surface in the app repaints for free. */
+  --color-base-950: #ffffff;
+  --color-base-900: #fafafa;
+  --color-base-850: #f5f5f7;
+  --color-base-800: #eeeef1;
+  --color-base-700: #e2e2e7;
+  --color-base-600: #cfcfd6;
+  --color-base-500: #a8a8b3;
+
+  /* Semantic theme tokens -- also light-theme defaults, overridden under
+     data-theme="dark". --color-surface and --color-border alias --color-fg (rather than
+     redeclaring their own per-theme values) so they flip automatically
+     whenever --color-fg does: white-tinted-on-dark, black-tinted-on-light.
+     This is what replaces the old literal bg-white/NN, border-white/NN,
+     divide-white/NN idiom with a theme-aware equivalent -- call sites use
+     bg-surface/5, border-surface/10 etc exactly like bg-white/5 used to
+     work, via Tailwind's /opacity modifier on any @theme color. */
+  --color-fg: #101013;
+  --color-bg: #ffffff;
+  --color-surface: var(--color-fg);
+  --color-border: var(--color-fg);
+
+  --color-brand-green: #16a34a;
+  --color-brand-blue: #2563eb;
+  /* The midpoint of the brand ramp, promoted to its own token. The B2B
+     storefront needs a single accent for secondary CTAs, active filter
+     pills and data emphasis; using either end of the green->blue gradient
+     for that made the page read as two competing brands. */
+  --color-brand-teal: #0d9488;
+
+  /* --- B2B storefront surface scale -------------------------------------
+     A separate, opaque scale from --color-base-*. The commerce app is a
+     translucent dark-glass UI; the storefront is a printed-brochure light
+     UI -- white cards on a tinted canvas with hairline rules, the way a
+     procurement committee expects a catalogue to look. Trying to express
+     that through the glass scale produced washed-out cards with no edges.
+     Both flip under data-theme="dark" below. */
+  --color-canvas: #f5f9f7;
+  --color-panel: #ffffff;
+  --color-panel-2: #eef4f1;
+  --color-line: #dce7e2;
+  --color-ink: #0b1f1a;
+  --color-ink-2: #5a7068;
+  --color-ink-3: #8b9c95;
+  /* Deep panels stay dark in BOTH themes -- they are the page's inverted
+     moments (ROI calculator, supply chain, lead generator), and flipping
+     them in dark mode would erase the contrast that makes them read as
+     separate objects at all. */
+  --color-deep: #06231d;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.2;
+  --text-md: 0.9375rem;
+
+  --animate-blob: blob 14s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 2.4s ease-in-out infinite;
+
+  @keyframes blob {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(18px, -22px) scale(1.08);
+    }
+    66% {
+      transform: translate(-14px, 14px) scale(0.94);
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.04);
+    }
+  }
+  /* Translates exactly one copy-width, so a track built from two back-to-back
+     copies of the same logo list loops with no visible seam. Pure CSS/GPU
+     transform -- no per-frame JS, no canvas, nothing to be "laggy". */
+  /* The assistant overlay's entrance: rises and settles, rather than simply
+     appearing. Transform + opacity only, so it stays on the compositor. */
+  @keyframes overlayIn {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 18px, 0) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* cult-ui's gradient-button-group spins a conic gradient behind the active
+     tile to make the gold ring travel. The component references
+     `animate-gold-spin` but the registry ships no keyframe for it, so without
+     this the ring renders as a static arc. */
+  --animate-gold-spin: gold-spin 4s linear infinite;
+
+  @keyframes gold-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Light is the product's default theme, so it is what the bare :root
+     carries -- no media query, no system-preference guess. Dark is opt-in
+     via the toggle, which persists to localStorage and sets
+     data-theme="dark" (ThemeContext.jsx, and the inline script in
+     index.html that runs before first paint). Keep those two in sync with
+     this selector if it ever changes. */
+  :root {
+    color-scheme: light;
+
+    --color-base-950: #ffffff;
+    --color-base-900: #fafafa;
+    --color-base-850: #f5f5f7;
+    --color-base-800: #eeeef1;
+    --color-base-700: #e2e2e7;
+    --color-base-600: #cfcfd6;
+    --color-base-500: #a8a8b3;
+
+    --color-fg: #101013;
+    --color-bg: #ffffff;
+
+    --color-brand-green: #16a34a;
+    --color-brand-blue: #2563eb;
+    --color-brand-teal: #0d9488;
+
+    --color-canvas: #f5f9f7;
+    --color-panel: #ffffff;
+    --color-panel-2: #eef4f1;
+    --color-line: #dce7e2;
+    --color-ink: #0b1f1a;
+    --color-ink-2: #5a7068;
+    --color-ink-3: #8b9c95;
+    --color-deep: #06231d;
+  }
+
+  /* Near-black rather than pure #000, so depth stays visible. */
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --color-base-950: #050506;
+    --color-base-900: #0b0b0d;
+    --color-base-850: #101013;
+    --color-base-800: #16161a;
+    --color-base-700: #202024;
+    --color-base-600: #2b2b31;
+    --color-base-500: #3d3d45;
+
+    --color-fg: #f5f5f7;
+    --color-bg: #050506;
+
+    --color-brand-green: #22c55e;
+    --color-brand-blue: #3b82f6;
+    --color-brand-teal: #2dd4bf;
+
+    --color-canvas: #05100d;
+    --color-panel: #0a1815;
+    --color-panel-2: #0f211c;
+    --color-line: #1b302a;
+    --color-ink: #ecf5f1;
+    --color-ink-2: #93a8a0;
+    --color-ink-3: #6b807a;
+    --color-deep: #04150f;
+  }
+
+  html {
+    background: var(--color-bg);
+  }
+
+  /* The active language picks the typeface. `lang` is set on <html> by the
+   * server for the first paint and by I18nProvider on every language switch,
+   * so this follows the visitor's choice with no per-component work. Scoped to
+   * :root so `font-sans` (Tailwind's utility, which reads --font-sans) and the
+   * body default both pick it up. */
+  :root[lang="fa"] {
+    --font-sans: var(--font-fa);
+  }
+
+  :root[lang="ar"] {
+    --font-sans: var(--font-ar);
+  }
+
+  /* Persian and Arabic are cursive scripts: letters join, and adding
+   * letter-spacing pulls the joins apart so words read as separate marks.
+   * Latin-style tracking (the many `tracking-*` utilities, and the wide
+   * uppercase "eyebrow" labels) is therefore switched off for them. This has
+   * to be !important: the utilities are single-class rules that would
+   * otherwise win on every element that sets one. */
+  :root[lang="fa"] *,
+  :root[lang="ar"] * {
+    letter-spacing: normal !important;
+  }
+
+  /* Taller lines, because the tashkeel, dots and descenders of these scripts
+   * need the room that Latin text does not. Set on the root so every element
+   * that does not choose its own `leading-*` inherits it. */
+  :root[lang="fa"] body,
+  :root[lang="ar"] body {
+    line-height: 1.75;
+  }
+
+  /* Uppercasing does nothing to Arabic script, and the small-caps look the
+   * labels are going for would be lost anyway; keep the source text as is. */
+  :root[lang="fa"] .uppercase,
+  :root[lang="ar"] .uppercase {
+    text-transform: none;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: none;
+  }
+
+  /* #root is now the full viewport, not a column.
+   *
+   * The B2B storefront is a desktop-first procurement surface: a hero
+   * spread, a four-up device grid, an installed-base map and a full-bleed
+   * catalogue viewer. None of that survives being poured into a 1120px
+   * strip, and the buyers it is written for -- clinic owners and hospital
+   * procurement committees -- are on 1440px+ displays.
+   *
+   * The signed-in commerce app (wallet, network, orders, support) is still
+   * a phone-shaped product and still wants the old column, so that column
+   * moved OUT of #root and into `.app-column`, applied by AppLayout /
+   * AuthLayout / BareLayout. Same numbers, same breakpoints, same
+   * rendering -- just scoped to the routes that want it instead of
+   * imposed on every route. Fixed chrome that restates the widths as
+   * utilities (BottomNav, the product page's buy bar) keeps working
+   * unchanged, which is why the steps below are unchanged too. */
+  #root {
+    min-height: 100dvh;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg);
+  }
+
+  .app-column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  /* Steps match Tailwind's md/lg/xl exactly. Some chrome is `fixed` and so
+   * cannot inherit this width -- it has to restate it as utilities, and the
+   * two only stay aligned if they share the same breakpoints. Hence no
+   * padding here either: one max-width, applied identically on both sides. */
+  @media (min-width: 768px) {
+    .app-column {
+      max-width: 720px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .app-column {
+      max-width: 940px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .app-column {
+      max-width: 1120px;
+    }
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-brand-green) 40%, transparent);
+    color: var(--color-fg);
+  }
+
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(90deg, var(--color-brand-green) 0%, var(--color-brand-blue) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, var(--color-brand-green) 0%, var(--color-brand-blue) 100%);
+  }
+
+  .bg-shimmer {
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-fg) 35%, transparent), transparent);
+    background-size: 200% 100%;
+  }
+
+  .glass {
+    background: color-mix(in oklab, var(--color-base-850) 78%, transparent);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  /* 3D device stage: the canvas is purely decorative and must never
+     intercept taps meant for the form underneath it. */
+  .device-stage canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    outline: none;
+  }
+}
+
+/* Global escape hatch for users who ask the OS for less motion. The JS side
+   (useReducedMotion) additionally skips the WebGL render loop and GSAP
+   scroll choreography entirely -- this block is the CSS half, covering the
+   decorative keyframe loops (blob/float/pulse-glow/shimmer) that would
+   otherwise keep running. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Section textures -------------------------------------------------- */
+
+/* Dot-matrix background. Pure CSS radial-gradient tiling rather than an image
+   or a canvas: it costs nothing, scales to any viewport, and inherits the
+   theme's foreground colour so it works in light and dark without a second
+   asset. */
+.bg-dotted {
+  background-image: radial-gradient(color-mix(in oklab, var(--color-fg) 13%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: -1px -1px;
+}
+
+.bg-dotted-dense {
+  background-image: radial-gradient(color-mix(in oklab, var(--color-fg) 16%, transparent) 1px, transparent 1px);
+  background-size: 13px 13px;
+}
+
+/* Fades a tiled background out toward the edges so it reads as a texture
+   rather than as a hard-edged panel. */
+.mask-fade-y {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+}
+
+.mask-fade-radial {
+  -webkit-mask-image: radial-gradient(ellipse at center, black 45%, transparent 78%);
+  mask-image: radial-gradient(ellipse at center, black 45%, transparent 78%);
+}
+
+/* Declared so it interpolates as a percentage rather than snapping between
+   string values -- ScrollTint writes it on scroll. */
+@property --tint {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+
+/* Scroll-driven section tint. The custom property is animated by GSAP (or set
+   once and left alone), so the paint stays on the compositor rather than
+   re-running a gradient on every frame. */
+@property --section-tint {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+.section-gradient {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--color-brand-green) 7%, transparent) var(--section-tint, 0%),
+    transparent 100%
+  );
+  transition: none;
+}
+
+/* --- B2B storefront ----------------------------------------------------
+ *
+ * Everything below is the printed-catalogue design language: an opaque
+ * tinted canvas, white cards with hairline rules and generous radii, pill
+ * controls, and a handful of "deep" inverted panels carrying a brand-green
+ * to brand-blue wash. It is scoped under `.b2b` so none of it leaks into
+ * the signed-in commerce app, which is a different product with a
+ * different (dark, translucent) visual system.
+ */
+
+.b2b {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+/* --- Signed-in portal ---------------------------------------------------
+ *
+ * Support, profile, network, orders and tickets were built against the
+ * commerce app's dark-glass scale (base-*, fg, surface) while the storefront
+ * uses an opaque light one. Rather than rewrite every page's markup, this
+ * remaps the scale those pages already consume onto the storefront palette,
+ * so the whole signed-in area matches the public site in one place -- and a
+ * page added later inherits it without anyone remembering to.
+ *
+ * The mapping is deliberate rather than mechanical: `surface` becomes `ink`,
+ * because the commerce components use it as `bg-surface/5` and
+ * `border-surface/10`, which on a light canvas has to be a dark tint at low
+ * opacity to read as a hairline rather than a white smear.
+ */
+.portal {
+  --color-base-950: var(--color-canvas);
+  --color-base-900: var(--color-canvas);
+  --color-base-850: var(--color-panel);
+  --color-base-800: var(--color-panel-2);
+  --color-base-700: var(--color-line);
+  --color-base-600: var(--color-line);
+  --color-base-500: var(--color-ink-3);
+
+  --color-fg: var(--color-ink);
+  --color-bg: var(--color-canvas);
+  --color-surface: var(--color-ink);
+  --color-border: var(--color-line);
+
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+/* Same border default as the storefront -- see the note there for why it
+   must sit in @layer base rather than outside one. */
+@layer base {
+  .portal *,
+  .portal *::before,
+  .portal *::after {
+    border-color: var(--color-line);
+  }
+}
+
+/* shadcn's components use the bare `border` utility and rely on a global
+   `* { @apply border-border }` base rule to colour it. Adopting that rule
+   unscoped would repaint every border in the signed-in commerce app too, so
+   it is scoped to the storefront -- the only place shadcn renders.
+ *
+ * It MUST sit in @layer base. Outside a layer it outranks every Tailwind
+ * utility regardless of specificity, so `border-transparent` stopped
+ * working and the header's nav links -- which use a transparent bottom
+ * border as an invisible placeholder for the active underline -- all grew
+ * a visible grey rule. In the base layer, any utility beats it, which is
+ * the whole point of a default. */
+@layer base {
+  .b2b *,
+  .b2b *::before,
+  .b2b *::after {
+    border-color: var(--color-line);
+  }
+
+  .b2b :focus-visible {
+    outline-color: color-mix(in oklab, var(--color-brand-green) 50%, transparent);
+  }
+}
+
+/* The page measure. Wider than the app column by design -- a four-up device
+ * grid and a two-page catalogue spread both need the room -- but still
+ * capped, because a hero headline running the full width of an ultrawide
+ * is unreadable no matter how much screen is available. */
+.b2b-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .b2b-container {
+    padding-inline: 1.75rem;
+  }
+}
+
+/* The inverted panels. A green-to-blue descent rather than the flat navy of
+ * a generic dashboard: it is the same ramp as the logo and the brand
+ * gradient, just at the dark end of it, so the deep sections read as the
+ * same brand rather than as a third palette. */
+.b2b-deep {
+  background-image: linear-gradient(135deg, #06231d 0%, #08293a 55%, #0a2547 100%);
+  color: #f2f7f5;
+}
+
+:root[data-theme="dark"] .b2b-deep {
+  background-image: linear-gradient(135deg, #04170f 0%, #061c28 55%, #061731 100%);
+}
+
+/* Corner light source for the deep panels. Sits behind content as a child
+ * element rather than as a second background-image so the glow can be
+ * positioned per panel without restating the base gradient each time. */
+.b2b-glow {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--color-brand-green) 26%, transparent),
+    transparent 70%
+  );
+}
+
+.b2b-glow-blue {
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--color-brand-blue) 26%, transparent),
+    transparent 70%
+  );
+}
+
+/* Card lift. Transform + shadow only, so the hover stays on the compositor
+ * and a 13-card grid does not repaint on every pointer move. */
+.b2b-card {
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.b2b-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px -12px color-mix(in oklab, var(--color-ink) 28%, transparent);
+  border-color: color-mix(in oklab, var(--color-brand-green) 35%, var(--color-line));
+}
+
+/* The cursor-following highlight. See lib/pointerSpotlight.js: that module
+   writes --spot-x/--spot-y/--spot-opacity, and everything here is paint the
+   compositor can do on its own. The gradient always exists and only its
+   opacity changes, so a hover costs no layout and no new layer. */
+[data-spotlight] {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-spotlight]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--spot-opacity, 0);
+  transition: opacity 0.25s ease;
+  background: radial-gradient(
+    16rem circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in oklab, var(--color-brand-green) 16%, transparent),
+    transparent 62%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-spotlight]::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .b2b-card:hover {
+    transform: none;
+  }
+}
+
+/* Scarcity / urgency pulse. Two-second cycle on opacity alone -- enough to
+ * catch the eye on a scan, not enough to fight the content for attention. */
+@keyframes b2b-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.68;
+  }
+}
+
+.b2b-pulse {
+  animation: b2b-pulse 2s ease-in-out infinite;
+}
+
+/* Tabular figures for anything that ticks: countdowns, payback months,
+ * prices under a slider. Without this the whole row reflows every second as
+ * digit widths change, which reads as the number flickering. */
+.b2b-tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The catalogue stage. Deep, so the page images read as paper held up
+ * against a dark table rather than as white-on-white. */
+.b2b-stage {
+  background-image: linear-gradient(160deg, #06231d 0%, #082433 60%, #0a2547 100%);
+}
+
+/* Hotspots over a catalogue page: invisible until hovered, then a soft
+ * brand-tinted plate with a ring. Invisible-by-default matters -- the page
+ * is a designed brochure and covering it in permanent boxes would vandalise
+ * the very thing it is showing off. */
+.b2b-hotspot {
+  position: absolute;
+  border-radius: 12px;
+  border: 1px dashed transparent;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.b2b-hotspot:hover,
+.b2b-hotspot:focus-visible {
+  background: color-mix(in oklab, var(--color-brand-green) 16%, transparent);
+  border-color: color-mix(in oklab, var(--color-brand-green) 70%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-brand-green) 18%, transparent);
+  outline: none;
+}
+
+/* Range inputs are the ROI model's only continuous control, and the default
+ * platform rendering is both ugly and inconsistent across browsers. */
+.b2b-range {
+  accent-color: var(--color-brand-green);
+  height: 1.5rem;
+}
+
+/* Aurora wash used behind the hero and the category headers. */
+.aurora {
+  background-image:
+    radial-gradient(60% 45% at 20% 15%, color-mix(in oklab, var(--color-brand-green) 16%, transparent), transparent 70%),
+    radial-gradient(55% 40% at 82% 25%, color-mix(in oklab, var(--color-brand-blue) 15%, transparent), transparent 70%);
+}
+
+/* --- Drift wall ---------------------------------------------------------
+ *
+ * The 3D product wall under the catalogue (components/reactbits/drift-wall).
+ * It lives here rather than in a sibling .css file because this app has one
+ * stylesheet, imported once from entry-client -- a second entry point would
+ * not be picked up by the SSR build at all.
+ *
+ * Two things are load-bearing rather than decorative:
+ *
+ *  - `pointer-events: none` on the inner element. The tiles sit on a
+ *    transformed plane, and letting them capture the pointer themselves
+ *    produced hit targets offset from where the tile appears. The component
+ *    resolves the tile under the cursor geometrically instead.
+ *  - The mask. Without it the wall ends in a hard rectangle with half-tiles
+ *    along every edge, which reads as a clipping bug. The radial and linear
+ *    gradients are composited so it dissolves into the page on all four
+ *    sides and a little harder towards the top.
+ */
+.drift-wall {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  perspective: var(--dw-perspective, 1200px);
+  perspective-origin: 50% 50%;
+  --dw-tile-w: 200px;
+  --dw-tile-h: 132px;
+  --dw-gap: 18px;
+  --dw-radius: 14px;
+  --dw-lift: 64px;
+  --dw-dim: 0.55;
+  --dw-gray: 0;
+  /* The scrim that makes a resting tile recede, and the plate it sits on.
+     Both are fixed rather than themed: the wall runs on an inverted panel in
+     both themes, and every image on it is a machine photographed on white,
+     so the plate has to stay light for a transparent PNG to read against it
+     and the scrim has to stay dark for a tile to look further away. */
+  --dw-overlay: #04140f;
+  --dw-plate: #f4f7f6;
+  --dw-edge: 40%;
+  /* Two masks intersected. The radial dissolves the left and right edges so
+     the wall does not end in a column of half-tiles; the linear one does the
+     same top and bottom. The vendor fades only upwards, which is right for a
+     full-bleed hero and wrong for a band with page above and below it -- the
+     bottom row got sliced off mid-tile. */
+  -webkit-mask-image:
+    radial-gradient(ellipse 78% 86% at 50% 50%, #000 var(--dw-edge), transparent 100%),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 calc(var(--dw-edge) / 2),
+      #000 calc(100% - var(--dw-edge) / 2),
+      transparent 100%
+    );
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(ellipse 78% 86% at 50% 50%, #000 var(--dw-edge), transparent 100%),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 calc(var(--dw-edge) / 2),
+      #000 calc(100% - var(--dw-edge) / 2),
+      transparent 100%
+    );
+  mask-composite: intersect;
+}
+
+.drift-wall__plane {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: row;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  /* The plane is centred with translate(-50%, -50%) in JS. Declared here so
+     the server render and the first paint are already in perspective. */
+  transform: translate(-50%, -50%) scale(1.18) rotateX(16deg) rotateY(-14deg);
+}
+
+.drift-wall__col {
+  position: relative;
+  width: calc(var(--dw-tile-w) + var(--dw-gap));
+  transform-style: preserve-3d;
+}
+
+.drift-wall__track {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.drift-wall__tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: calc(var(--dw-tile-h) + var(--dw-gap));
+  flex: 0 0 auto;
+  outline: none;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+.drift-wall__inner {
+  position: absolute;
+  inset: calc(var(--dw-gap) / 2);
+  display: block;
+  border-radius: var(--dw-radius);
+  overflow: hidden;
+  background: var(--dw-plate);
+  opacity: var(--dw-dim);
+  transform: translateZ(0);
+  pointer-events: none;
+  transition:
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The filter goes on the wrapper, not on an `img`. A device is a photograph,
+   a cropped background region of a catalogue page, or an emoji -- see
+   lib/deviceVisual -- and only the first of those is an image element. */
+.drift-wall__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  filter: grayscale(var(--dw-gray)) saturate(0.92);
+  transition: filter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.drift-wall__media > * {
+  width: 100%;
+  height: 100%;
+}
+
+.drift-wall__media img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.drift-wall__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--dw-overlay);
+  opacity: 0.42;
+  pointer-events: none;
+  transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.drift-wall__tile.is-active .drift-wall__inner,
+.drift-wall__tile:focus-visible .drift-wall__inner {
+  opacity: 1;
+  transform: translateZ(var(--dw-lift));
+  box-shadow: 0 24px 60px -18px rgb(0 0 0 / 0.75);
+}
+
+.drift-wall__tile.is-active .drift-wall__media,
+.drift-wall__tile:focus-visible .drift-wall__media {
+  filter: grayscale(0) saturate(1.05);
+}
+
+.drift-wall__tile.is-active .drift-wall__overlay,
+.drift-wall__tile:focus-visible .drift-wall__overlay {
+  opacity: 0;
+}
+
+.drift-wall__tile:focus-visible .drift-wall__inner {
+  box-shadow:
+    0 24px 60px -18px rgb(0 0 0 / 0.75),
+    0 0 0 2px var(--color-brand-green);
+}
+
+/* Reduced motion keeps the wall -- it is a legible grid of products, and the
+   tiles are still real links -- but nothing drifts and nothing lifts. The
+   component skips the transform loop; this is the paint half. */
+@media (prefers-reduced-motion: reduce) {
+  .drift-wall__plane,
+  .drift-wall__track {
+    will-change: auto;
+  }
+
+  .drift-wall {
+    --dw-dim: 0.9;
+    --dw-lift: 0px;
+  }
+}
+
+/* --- Print --------------------------------------------------------------
+ *
+ * The proforma preview is meant to be saved as a PDF from the browser's own
+ * print dialog (see ProformaPreview). Without this, printing produces the
+ * whole storefront -- header, ticker, chat launcher and all -- with the
+ * document somewhere in the middle. These rules lift the sheet out of the
+ * dialog it lives in and put it alone on the page.
+ */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  [data-proforma-sheet],
+  [data-proforma-sheet] * {
+    visibility: visible;
+  }
+
+  [data-proforma-sheet] {
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0;
+    width: 100%;
+    max-width: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  @page {
+    margin: 16mm;
+  }
+}
+
+/* --- Rendered Markdown (blog posts) ---------------------------------------
+ *
+ * Styles for the output of components/ui/Markdown.jsx. Hand-written rather
+ * than the typography plugin: the plugin would add a dependency and a second
+ * opinion about colour, and everything here reads the storefront tokens, so
+ * it follows the light/dark switch with no extra rules.
+ *
+ * Logical properties throughout (margin-inline, padding-inline-start,
+ * border-inline-start) so a Persian or Arabic post -- or an English one in a
+ * right-to-left page -- indents, quotes and lists from the correct side.
+ */
+.md-content {
+  color: var(--color-ink);
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.md-content > :first-child {
+  margin-top: 0;
+}
+
+.md-content h1,
+.md-content h2,
+.md-content h3,
+.md-content h4 {
+  color: var(--color-ink);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin-block: 2em 0.6em;
+}
+
+.md-content h1 { font-size: 2rem; }
+.md-content h2 { font-size: 1.5rem; }
+.md-content h3 { font-size: 1.2rem; }
+.md-content h4 { font-size: 1.05rem; }
+
+.md-content p,
+.md-content ul,
+.md-content ol,
+.md-content blockquote,
+.md-content pre,
+.md-content table,
+.md-content figure {
+  margin-block: 1.1em;
+}
+
+.md-content ul,
+.md-content ol {
+  padding-inline-start: 1.5em;
+}
+
+.md-content ul { list-style: disc; }
+.md-content ol { list-style: decimal; }
+.md-content li { margin-block: 0.35em; }
+.md-content li > ul,
+.md-content li > ol { margin-block: 0.35em; }
+
+.md-content a {
+  color: var(--color-brand-green);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.md-content a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.md-content blockquote {
+  border-inline-start: 4px solid var(--color-brand-green);
+  background: var(--color-panel-2);
+  padding: 0.6em 1.1em;
+  border-radius: 0 0.75rem 0.75rem 0;
+  color: var(--color-ink-2);
+}
+
+:root[dir="rtl"] .md-content blockquote {
+  border-radius: 0.75rem 0 0 0.75rem;
+}
+
+.md-content blockquote > :first-child { margin-top: 0; }
+.md-content blockquote > :last-child { margin-bottom: 0; }
+
+.md-content code {
+  background: var(--color-panel-2);
+  border: 1px solid var(--color-line);
+  border-radius: 0.375rem;
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.md-content pre {
+  background: var(--color-panel-2);
+  border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
+  padding: 1em 1.1em;
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left;
+}
+
+.md-content pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 0.875em;
+}
+
+.md-content hr {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  margin-block: 2em;
+}
+
+.md-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin-block: 1.4em;
+}
+
+.md-content table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+.md-content th,
+.md-content td {
+  border: 1px solid var(--color-line);
+  padding: 0.5em 0.8em;
+  text-align: start;
+}
+
+.md-content th {
+  background: var(--color-panel-2);
+  font-weight: 700;
+}
+
+.md-content input[type="checkbox"] {
+  margin-inline-end: 0.5em;
+}

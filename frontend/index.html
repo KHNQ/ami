@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Sets the theme attribute before anything paints, so there's no
+         flash of the wrong theme while React/ThemeContext boot up. Mirrors
+         ThemeContext.jsx's resolution order: a stored choice wins, and
+         everyone else gets light (the product default) -- keep the two in
+         sync if that logic ever changes. -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("trex-theme");
+          document.documentElement.dataset.theme = stored === "dark" ? "dark" : "light";
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <!-- The real Ashkan Medical brand mark. Generated from the same logo the
+         app renders in BrandLogo -- see scripts/make-favicon.mjs. There is
+         deliberately no SVG variant: the logo is a raster asset, so an
+         "SVG" favicon could only be that same bitmap wrapped in a data URI,
+         which is a ~200KB favicon that gains nothing over the PNGs below and
+         would take priority over them in every modern browser. -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+    <!-- iOS Safari doesn't read the web manifest's icons array for the
+         home-screen icon -- it specifically wants this tag. -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Ashkan Medical Idea — buy products, build your space, earn on your network." />
+
+    <!-- API origin: kick off the connection now so the first fetch
+         (auth/products) doesn't pay that latency on top of the request.
+         Injected at runtime rather than as a static %VITE_API_BASE_URL%
+         because the API host is resolved from the current hostname at
+         runtime -- see src/lib/api.js for why it can't be baked in. -->
+    <script>
+      (function () {
+        try {
+          var link = document.createElement("link");
+          link.rel = "preconnect";
+          link.crossOrigin = "";
+          link.href = location.protocol + "//" + location.hostname + ":%VITE_API_PORT%";
+          document.head.appendChild(link);
+        } catch {
+          /* preconnect is a pure optimization -- never block boot on it */
+        }
+      })();
+    </script>
+
+    <!-- Fonts are bundled with the app (see the @font-face imports at the top
+         of src/index.css) rather than fetched from Google Fonts: Persian and
+         Arabic readers are mostly in Iran, where third-party font hosts are
+         unreliable, and a font that does not arrive means the page renders in
+         whatever the system has. -->
+
+    <title>Ashkan Medical Idea</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/entry-client.jsx"></script>
+  </body>
+</html>

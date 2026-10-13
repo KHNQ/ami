@@ -1,0 +1,47 @@
+{
+  "source": "https://ashkan-medical.com/en/career-opportunities/",
+  "crawled_at": "2026-08-31",
+  "title": "Career opportunities",
+  "hero": "You are the average of the five people you spend the most time with.",
+  "intro": "We look for expertise, experience, a collaborative instinct, and an appetite for continuous learning. At Ashkan Medical Idea we are pursuing big dreams, and we know that achieving them comes through collaboration, hard work, discipline, friendship and unity.",
+  "open_positions": [],
+  "open_positions_note": "The source site lists no specific vacancies -- it collects general applications through a single form. The form schema below mirrors it field for field.",
+  "form": {
+    "fields": [
+      {
+        "name": "field_of_work",
+        "label": "Field of work",
+        "type": "select",
+        "required": true,
+        "options": ["Sales", "Technical", "Financial", "Accounting", "Warehousing", "Administrative staff", "Other"]
+      },
+      { "name": "first_name", "label": "First name", "type": "text", "required": true, "max_length": 80 },
+      { "name": "last_name", "label": "Last name", "type": "text", "required": true, "max_length": 80 },
+      { "name": "phone", "label": "Mobile phone number", "type": "tel", "required": true, "max_length": 40 },
+      { "name": "date_of_birth", "label": "Date of birth", "type": "date", "required": true },
+      { "name": "gender", "label": "Gender", "type": "radio", "required": false, "options": ["Male", "Female", "Prefer not to say"] },
+      {
+        "name": "education_level",
+        "label": "Highest qualification",
+        "type": "select",
+        "required": false,
+        "options": ["Diploma", "Bachelor's", "Master's", "Doctorate"]
+      },
+      { "name": "field_of_study", "label": "Field of study", "type": "text", "required": false, "max_length": 120 },
+      { "name": "place_of_education", "label": "Place of education", "type": "text", "required": false, "max_length": 120 },
+      { "name": "company_name", "label": "Most recent employer", "type": "text", "required": false, "max_length": 120 },
+      { "name": "job_title", "label": "Most recent job title", "type": "text", "required": false, "max_length": 120 },
+      { "name": "start_date", "label": "Started", "type": "date", "required": false },
+      { "name": "end_date", "label": "Ended", "type": "date", "required": false },
+      { "name": "additional_info", "label": "Anything else we should know", "type": "textarea", "required": false, "max_length": 4000 },
+      {
+        "name": "resume",
+        "label": "CV / résumé",
+        "type": "file",
+        "required": false,
+        "max_bytes": 5242880,
+        "accept": ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,251 @@
+[
+  {
+    "slug": "prime-lase",
+    "name": "Prime Lase",
+    "category": "Skin and hair rejuvenation",
+    "manufacturer": "Sinclair",
+    "description": "Multi-wavelength laser platform (755/810/810+940+1060/1060 nm) with up to 4800W power for hair removal across all skin types, plus skin rejuvenation, vascular and pigmented lesion treatment, and acne therapy. Uses Ultra Short Pulse and Crystal Freeze (5°C handpiece) technology; whole-body treatment in ~30 minutes.",
+    "features": [
+      "Four wavelengths: 755nm Alex, 810nm Diode, 810+940+1060nm Blend, 1060nm Nd:Yag",
+      "Maximum power 4800 watts",
+      "Ultra Short Pulse technology, 3ms minimum pulse width",
+      "Crystal Freeze handpiece cooling to 5°C",
+      "Top Hat spot technology for uniform energy transfer",
+      "Shot frequency up to 3 Hz",
+      "Whole body treatment in 30 minutes",
+      "Static and dynamic operational modes"
+    ],
+    "applications": ["Hair removal", "Skin rejuvenation", "Vascular lesion treatment", "Pigmented lesion removal", "Acne treatment"],
+    "certifications": ["FDA Approved", "CE Certified", "Gold Standard Award"],
+    "image": "content/ashkan-medical/images/prime-lase.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/prime-lease/"
+  },
+  {
+    "slug": "elysion-pro",
+    "name": "Elysion Pro",
+    "category": "Removal of excess hair",
+    "manufacturer": "Cocoon Medical",
+    "description": "Hair removal laser with four handpieces (755nm Alex, 810nm Diode, 810+940+1060nm Blend, 1060nm Nd:Yag) delivering over 3000W. Crystal Freeze cooling for comfortable, no-downtime treatments across all skin types (I-VI), roughly 4x faster than comparable devices.",
+    "features": [
+      "Four handpieces across four wavelengths",
+      "Over 3000 watts performance power",
+      "Crystal Freeze technology, no recovery time",
+      "Static and dynamic functional modes",
+      "USP (Ultra Short Pulse) technology",
+      "Variety of spot sizes",
+      "No maintenance fee, no consumption costs",
+      "Suitable for all skin types (I-VI)"
+    ],
+    "applications": ["Hair removal", "Skin rejuvenation", "Pigmented lesion removal"],
+    "certifications": ["Gold Standard", "FDA Approved", "CE Medical"],
+    "image": "content/ashkan-medical/images/elysion-pro.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/elysion-pro/"
+  },
+  {
+    "slug": "angela",
+    "name": "Angela MX_7000",
+    "category": "Skin and hair rejuvenation",
+    "manufacturer": "IDS",
+    "description": "Fractional CO2 laser using SmartPulse technology (a high-power ablative phase followed by a thermal phase) to create up to 4,489 columns per 20x20mm section, stimulating collagen and new vessel formation with reduced thermal damage and PIH risk. Covers skin rejuvenation and gynecological/urological applications.",
+    "features": [
+      "SmartPulse two-stage energy delivery",
+      "Up to 4,489 points per 20x20mm section",
+      "Ultra Pulse Mode for pain reduction",
+      "Three laser radiation patterns: array, grid, random",
+      "Low Pain Fractional Mode for sensitive patients"
+    ],
+    "applications": [
+      "Skin rejuvenation and anti-aging", "Wrinkle and fine line correction", "Scar treatment",
+      "Age spot and melasma reduction", "Pore refinement", "Vaginal rejuvenation",
+      "Stress urinary incontinence treatment", "Labiaplasty"
+    ],
+    "certifications": ["FDA", "CE", "KFDA"],
+    "image": "content/ashkan-medical/images/angela.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/angela/"
+  },
+  {
+    "slug": "ashley",
+    "name": "Ashley",
+    "category": "Skin and hair rejuvenation",
+    "manufacturer": "IDS",
+    "description": "Micro-needle radiofrequency device that penetrates the dermis with fine, gold-insulated needles delivering high-frequency energy, minimizing epidermal destruction versus conventional fractional lasers. Adjustable penetration depth (0.5mm-4mm) enables fast treatment with minimal recovery time.",
+    "features": [
+      "Adjustable penetration depth 0.5mm-4mm in 0.1mm intervals",
+      "Four series of handpieces",
+      "Gold-insulated fine needles",
+      "Automatic and manual operation modes",
+      "No wounds, burns, or pigmentation side effects",
+      "Painless treatment with quick recovery"
+    ],
+    "applications": ["Scar and acne scar removal", "Deep wrinkle treatment", "Sagging skin and open pore treatment", "Pigmented lesion treatment"],
+    "certifications": ["CE Medical", "FDA"],
+    "image": "content/ashkan-medical/images/ashley.webp",
+    "source_url": "https://ashkan-medical.com/en/product/ashley/"
+  },
+  {
+    "slug": "cooltech-cooltech-define",
+    "name": "Cooltech / Cooltech Define",
+    "category": "Slimming and fitness",
+    "manufacturer": "Sinclair / Cocoon Medical",
+    "description": "Cryolipolysis platform that freezes subcutaneous fat tissue to -8°C, triggering apoptosis to permanently eliminate fat cells without harming surrounding tissue. Cooltech Define adds 9 ergonomic handpieces, 4 simultaneous applicators, 360-degree cooling, and an optical detection system; full-body contouring in about 2 hours.",
+    "features": [
+      "9 ergonomic handpieces adaptable to all body areas (Define)",
+      "Simultaneous operation of 4 applicators",
+      "360-degree cooling of the treatment area",
+      "9 treatment models, 3 adjustable suction levels",
+      "1 massage handpiece for effectiveness",
+      "RFID cool gel pad system, optical detection sensors"
+    ],
+    "applications": ["Abdomen, arms, armpits, chin/submental, inner thigh, knee, pubic region, back and flank fat reduction", "Full body contouring"],
+    "certifications": ["CE Medical", "FDA (related products)"],
+    "image": "content/ashkan-medical/images/cooltech-cooltech-define.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/cooltech-cooltech-define/"
+  },
+  {
+    "slug": "powershape2",
+    "name": "Powershape 2",
+    "category": "Slimming and fitness",
+    "manufacturer": "EunSung",
+    "description": "3-in-1 cellulite and local fat treatment system combining radiofrequency, vacuum, and low-level laser. RF delivers thermal energy via bipolar/multipolar handpieces, vacuum improves circulation and lymphatic drainage, and targeted laser wavelengths reduce fat cell size. Usable on all body types, all skin types, and the face.",
+    "features": [
+      "Bipolar and multipolar RF handpieces",
+      "Vacuum suction for circulation and lymphatic drainage",
+      "Low-level laser fat cell reduction",
+      "Touch screen interface",
+      "Painless, no anesthesia, no cuts or downtime"
+    ],
+    "applications": ["Local fat and cellulite reduction", "Lipoedema treatment", "Sagging skin correction", "Facial rejuvenation and wrinkle reduction", "Post-surgical edema and circulation improvement"],
+    "certifications": ["CE", "ISO 9001", "ISO 13485"],
+    "image": "content/ashkan-medical/images/powershape2.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/powershape2/"
+  },
+  {
+    "slug": "4plus",
+    "name": "4Plus",
+    "category": "Skin and hair rejuvenation",
+    "manufacturer": "Novaclinical",
+    "description": "Multipurpose radiofrequency platform using Dynamic Quadrupole RF (DQRF) to precisely target epidermis, dermis, and hypodermis for face and body rejuvenation, tightening, and contouring. Six technologies in one platform, fully non-invasive, no anesthesia or cooling system required, with five handpieces including a 384-microneedle fractional RF tip.",
+    "features": [
+      "Dynamic Quadrupole Radio Frequency (DQRF) technology",
+      "Six technologies in one platform (IOMT, DQRF, UPR, RSS, VRF)",
+      "Five handpieces incl. fractional RF with 384 gold-plated microneedles",
+      "No anesthesia or cooling system required",
+      "Autoclave-sterilizable handpieces",
+      "Remote support via IoMT connectivity"
+    ],
+    "applications": [
+      "Face lifting and contouring", "Hand and neck rejuvenation", "Stretch mark reduction",
+      "Body shaping and cellulite reduction", "Vaginal atrophy and laxity treatment", "Mild stress urinary incontinence"
+    ],
+    "certifications": ["FDA Approved", "CE Certified"],
+    "image": "content/ashkan-medical/images/4plus.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/4plus/"
+  },
+  {
+    "slug": "tesla-former",
+    "name": "Tesla Former",
+    "category": "Slimming and fitness",
+    "manufacturer": "IskraMedical",
+    "description": "Functional Magnetic Stimulation (FMS) device that generates a pulsed magnetic field to trigger supermaximal muscle contractions, building muscle faster than conventional strength training, without skin contact or electrode discomfort. Delivers up to 50,000 pulses per 30-minute session, no operator or recovery period required.",
+    "features": [
+      "Functional Magnetic Stimulation (FMS)",
+      "Up to 50,000 pulses per 30-minute session",
+      "No skin contact required",
+      "No mandatory rest periods",
+      "Targets abdomen, hips, hamstrings, arms, pelvic floor, legs, mid-body"
+    ],
+    "applications": ["Body shaping and muscle growth", "Fat burning", "Hip lifting", "Posture improvement", "Neurophysiotherapy and sports rehabilitation", "Pelvic floor / sexual dysfunction treatment"],
+    "certifications": ["CE Medical", "ISO 9001", "ISO 13485", "EU MDD 93/42/EEC"],
+    "image": "content/ashkan-medical/images/tesla-former.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/tesla-former/"
+  },
+  {
+    "slug": "inbody",
+    "name": "InBody",
+    "category": "Body analysis",
+    "manufacturer": "InBody",
+    "description": "Body composition analyzer using direct electrical impedance measurement, giving results independent of estimation-based parameters like gender and age, so clinics can analyze body composition in-office without relying on population averages.",
+    "features": [
+      "Direct electrical impedance measurement",
+      "Results independent of gender/age estimation",
+      "In-office analysis, no lab required"
+    ],
+    "applications": ["Body composition analysis", "Weight loss and fitness tracking", "Slimming clinic assessments"],
+    "certifications": ["FDA Approved", "CE Certified"],
+    "image": "content/ashkan-medical/images/inbody.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/inbody/"
+  },
+  {
+    "slug": "pico-premium",
+    "name": "Pico Premium",
+    "category": "Tattoo removal",
+    "manufacturer": "IDS",
+    "description": "Picosecond laser system (Nd:YAG 532/1064nm, plus 595/660nm capability) with a 350-picosecond pulse width — among the shortest available — enabling effective treatment of tattoos and pigmented lesions that don't respond to conventional nanosecond lasers, with minimal pain and quick sessions.",
+    "features": [
+      "350 picosecond pulse width",
+      "Dual wavelength: Nd:YAG 532/1064nm plus 595/660nm",
+      "Fractional handpiece compatible",
+      "Smart protocol treatment programs",
+      "High peak power across all tattoo colors/depths"
+    ],
+    "applications": ["Tattoo removal (all colors)", "Fine wrinkle removal", "Acne treatment", "Melasma and freckle treatment", "Nevus and lentigo treatment"],
+    "certifications": [],
+    "image": "content/ashkan-medical/images/pico-premium.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/pico-premium/"
+  },
+  {
+    "slug": "q10",
+    "name": "Q10",
+    "category": "Vascular surgery",
+    "manufacturer": "IDS",
+    "description": "Q-switched Nd:YAG laser (1064nm, convertible to 532nm) targeting melanin and hemoglobin to treat vascular lesions, pigmented lesions, melasma, and tattoo ink. Flat Top-Hat beam profile ensures stable, uniform energy transmission; Genesis Mode enables Nano Peeling.",
+    "features": [
+      "1064nm Q-switched, convertible to 532nm",
+      "Flat Top-Hat beam profile",
+      "Genesis Mode Nano Peeling (330-400 / 1000 microsecond pulses)",
+      "Normal mode pulse width 5-8 nanoseconds",
+      "Optional fractional and dye handpieces (585/650nm)"
+    ],
+    "applications": ["Tattoo removal", "Pigmented lesion treatment", "Melasma", "Vascular lesion treatment"],
+    "certifications": ["FDA Approved", "CE Certified"],
+    "image": "content/ashkan-medical/images/q10.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/q10/"
+  },
+  {
+    "slug": "exciplex",
+    "name": "Exciplex",
+    "category": "Otorhinolaryngology (ENT) / Phototherapy",
+    "manufacturer": "Clarteis",
+    "description": "Compact excimer phototherapy device (308nm XeCl, monochrome UVB) with optical power three times higher than other manual excimers, a 25cm² spot size, and sub-1kg weight for fast, comfortable, near side-effect-free treatment of vitiligo, psoriasis, atopic dermatitis, alopecia areata, and mycosis fungoides.",
+    "features": [
+      "308nm Xenon Chloride (XeCl) excimer lamp",
+      "Optical power 3x higher than manual excimers, up to 3x faster treatment",
+      "Spot size up to 25cm²",
+      "Weight 950g, dimensions 27x8x15cm",
+      "Microcontroller-managed radiation dosing",
+      "Ergonomic design with carrying case"
+    ],
+    "applications": ["Vitiligo", "Psoriasis", "Atopic dermatitis", "Alopecia areata", "Mycosis fungoides"],
+    "certifications": ["FDA Approved", "CE Mark", "Approved in 40+ countries"],
+    "image": "content/ashkan-medical/images/exciplex.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/exciplex/"
+  },
+  {
+    "slug": "wolf",
+    "name": "Wolf",
+    "category": "Vascular surgery",
+    "manufacturer": "A.R.C Laser",
+    "description": "Compact, portable 1470nm diode laser system (also available at 445nm/10W and 980nm/18W) for treating vascular lesions of the lower limbs, with simple operation, low maintenance, an integrated cooling system, and support for multiple user profiles.",
+    "features": [
+      "Three wavelength options: 445nm (10W), 980nm (18W), 1470nm (10W)",
+      "Integrated robust cooling system",
+      "360-degree emission via donut fiber connection",
+      "Multiple saved user profiles",
+      "Portable and low-maintenance"
+    ],
+    "applications": ["Vascular lesion treatment", "Proctology procedures", "Hemorrhoid management", "Fistula treatment", "Pilonidal sinus intervention", "Tonsillotomy"],
+    "certifications": [],
+    "image": "content/ashkan-medical/images/wolf.jpg",
+    "source_url": "https://ashkan-medical.com/en/product/wolf/"
+  }
+]
