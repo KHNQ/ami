@@ -1,10 +1,11 @@
+import { isValidEmail } from "../lib/validation.js";
 import { db } from "../db/index.js";
 import { hashPassword, verifyPassword, signToken } from "../lib/auth.js";
 import { newResetToken, hashResetToken } from "../lib/resetToken.js";
 import { Errors } from "../lib/errors.js";
 import { config } from "../config.js";
 import { emailService } from "./emailService.js";
-import { staffRoleOf, permissionsFor } from "../lib/permissions.js";
+import { ROOT, staffRoleOf, permissionsFor } from "../lib/permissions.js";
 
 function publicUser(u) {
   // staff_role and permissions ride along so a client can render the right
@@ -29,6 +30,10 @@ function publicUser(u) {
 export const authService = {
   async signup({ email, password, name }) {
     if (!email || !password || !name) throw Errors.badRequest("email, password, and name are required");
+    if (typeof password !== "string" || typeof name !== "string") {
+      throw Errors.badRequest("email, password, and name must be text");
+    }
+    if (!isValidEmail(email)) throw Errors.badRequest("email is not a valid address", "invalid_email");
     if (password.length < 8) throw Errors.badRequest("password must be at least 8 characters");
     const existing = db.users.findByEmail(email);
     if (existing) throw Errors.conflict("An account with this email already exists", "email_taken");
@@ -208,6 +213,17 @@ export const authService = {
     if (!user) throw Errors.notFound("User not found");
     const ok = await verifyPassword(password, user.password_hash);
     if (!ok) throw Errors.unauthorized("Password is incorrect", "invalid_credentials");
+
+    // The same rule setUserRole enforces for demotion: if this is the last root
+    // admin, nobody is left who can create admins or change anyone's access, and
+    // nothing short of hand-editing the database can fix that. Deleting yourself
+    // is demotion by another door.
+    if (staffRoleOf(user) === ROOT && db.users.countRootAdmins() <= 1) {
+      throw Errors.badRequest(
+        "This is the last root admin -- promote another root admin before deleting this account",
+        "last_root_admin"
+      );
+    }
 
     const anonymizedEmail = `deleted-${userId}@deleted.local`;
     db.users.markDeleted(userId, anonymizedEmail);

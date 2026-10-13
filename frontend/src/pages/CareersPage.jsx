@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Paperclip } from "lucide-react";
 import { CAREERS } from "../lib/siteContent.generated.js";
@@ -18,13 +18,18 @@ const MAX_RESUME_BYTES = 5 * 1024 * 1024;
 // there produces it here -- rather than a hardcoded copy that drifts from what
 // the API validates.
 function Field({ field, value, onChange }) {
+  const t = useT();
+  // The select and textarea labels sit beside their control rather than around it,
+  // so they have to be linked explicitly or a screen reader announces an unnamed field.
+  const id = useId();
   const label = field.required ? `${field.label} *` : field.label;
 
   if (field.type === "select") {
     return (
       <div>
-        <label className="mb-1.5 block text-[12.5px] font-medium text-fg/55">{label}</label>
+        <label htmlFor={id} className="mb-1.5 block text-[12.5px] font-medium text-fg/55">{label}</label>
         <select
+          id={id}
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
           className="h-11 w-full rounded-xl border border-surface/10 bg-surface/5 px-3 text-[14px] text-fg"
@@ -67,8 +72,9 @@ function Field({ field, value, onChange }) {
   if (field.type === "textarea") {
     return (
       <div>
-        <label className="mb-1.5 block text-[12.5px] font-medium text-fg/55">{label}</label>
+        <label htmlFor={id} className="mb-1.5 block text-[12.5px] font-medium text-fg/55">{label}</label>
         <textarea
+          id={id}
           rows={3}
           maxLength={field.max_length}
           value={value ?? ""}

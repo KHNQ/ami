@@ -17,6 +17,17 @@ import { settingsService } from "./settingsService.js";
 export const purchaseService = {
   // Self-service purchase from the storefront: paid from the buyer's wallet.
   buy({ userId, productId, redeemCode, discountCents = 0 }) {
+    // The "Require verified email" setting says a new account must confirm its
+    // address before it can BUY. It was defined, shown in the console and
+    // documented, but nothing read it, so switching it on changed nothing.
+    // Self-service purchases only: a walk-in is recorded by staff who have the
+    // customer in front of them, which is stronger than a clicked link.
+    if (settingsService.isEnabled("require_email_verification")) {
+      const buyer = db.users.findById(userId);
+      if (buyer && !buyer.email_verified_at) {
+        throw Errors.forbidden("Please confirm your email address before buying", "email_not_verified");
+      }
+    }
     return this.placeOrder({ userId, productId, redeemCode, discountCents, payment: { mode: "wallet" } });
   },
 
@@ -79,6 +90,18 @@ export const purchaseService = {
     const yAtSaleCents = (priceCents ?? product.list_price_y_cents) - discountCents;
     if (yAtSaleCents <= 0) throw Errors.badRequest("discount cannot meet or exceed list price");
     const marginCents = yAtSaleCents - xAtSaleCents;
+
+    // More cash than the order is worth is a typo (an extra zero), not a sale.
+    // Left unchecked it records a negative outstanding balance, and every
+    // report built on amount_received then overstates what the company
+    // actually collected against this order.
+    if (isOffline && payment.amountReceivedCents > yAtSaleCents) {
+      throw Errors.unprocessable(
+        `amount_received_cents (${payment.amountReceivedCents}) is more than the order value (${yAtSaleCents})`,
+        "amount_received_exceeds_order_value",
+        { amountReceivedCents: payment.amountReceivedCents, orderValueCents: yAtSaleCents }
+      );
+    }
 
     // Invariant 1: reject rather than silently clamp an over-large discount.
     if (marginCents < plan.min_margin_threshold_cents) {

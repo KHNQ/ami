@@ -116,7 +116,7 @@ function PricingSection({ product, onSaved, toast }) {
   const [newX, setNewX] = useState("");
   const [savingY, setSavingY] = useState(false);
   const [savingX, setSavingX] = useState(false);
-  const { data: history, refetch: refetchHistory } = useAsync(() => api.getWarehouseCostHistory(product.id), [product.id]);
+  const { data: history, refetch: refetchHistory } = useAsync(() => api.getWarehouseCostHistory(product.id), [product.id, product.current_x_cents]);
 
   async function saveY() {
     setSavingY(true);
@@ -245,11 +245,31 @@ function LeaseSection({ product, onSaved, toast }) {
 }
 
 function StockSection({ product, onSaved, toast }) {
+  const [qty, setQty] = useState("");
+  const [cost, setCost] = useState((product.current_x_cents / 100).toFixed(2));
   const [loading, setLoading] = useState(false);
-  async function adjust(delta) {
+
+  // The cost field follows the recorded cost when it changes elsewhere (the
+  // Pricing section below, or a previous delivery).
+  useEffect(() => {
+    setCost((product.current_x_cents / 100).toFixed(2));
+  }, [product.current_x_cents]);
+
+  const qtyN = Number.parseInt(qty, 10);
+  const costCents = Math.round(parseFloat(cost) * 100);
+  const validQty = Number.isInteger(qtyN) && qtyN > 0;
+  const validCost = Number.isFinite(costCents) && costCents >= 0;
+  // Selling is refused when price - cost falls under the plan's minimum margin,
+  // so say so while the admin can still change the number.
+  const marginCents = product.list_price_y_cents - costCents;
+  const costChanges = validCost && costCents !== product.current_x_cents;
+
+  async function submit(delta, withCost) {
     setLoading(true);
     try {
-      await api.adjustStock(product.id, { delta });
+      await api.adjustStock(product.id, delta, withCost ? costCents : undefined);
+      toast.success(delta > 0 ? `Added ${delta} to stock` : `Removed ${-delta} from stock`);
+      setQty("");
       onSaved();
     } catch (err) {
       toast.error(err.message);
@@ -257,21 +277,38 @@ function StockSection({ product, onSaved, toast }) {
       setLoading(false);
     }
   }
+
   return (
     <SectionCard title="Stock">
-      <div className="flex items-center justify-between">
-        <div className="text-[22px] font-extrabold text-fg">{product.stock_count}</div>
-        <div className="flex gap-2">
-          <Button size="sm" variant="secondary" loading={loading} onClick={() => adjust(-10)}>
-            -10
-          </Button>
-          <Button size="sm" variant="secondary" loading={loading} onClick={() => adjust(10)}>
-            +10
-          </Button>
-          <Button size="sm" variant="secondary" loading={loading} onClick={() => adjust(100)}>
-            +100
-          </Button>
-        </div>
+      <div className="mb-3 text-[22px] font-extrabold text-fg" data-testid="stock-count">
+        {product.stock_count}
+      </div>
+      <div className="flex flex-wrap items-end gap-2">
+        <Input label="Quantity" type="number" min="1" step="1" placeholder="e.g. 5" value={qty} onChange={(e) => setQty(e.target.value)} />
+        <Input
+          label="Cost per unit"
+          prefix="$"
+          type="number"
+          min="0"
+          step="0.01"
+          value={cost}
+          onChange={(e) => setCost(e.target.value)}
+        />
+      </div>
+      {validCost && (
+        <p className={`mt-2 text-[12px] ${marginCents <= 0 ? "text-red-400" : "text-fg/40"}`}>
+          {costChanges ? "This becomes the warehouse cost for new sales. " : ""}
+          Margin at the list price ({money(product.list_price_y_cents)}): {money(marginCents)}
+          {marginCents <= 0 ? " -- sales will be refused until the cost is below the price." : "."}
+        </p>
+      )}
+      <div className="mt-3 flex gap-2">
+        <Button size="sm" loading={loading} disabled={!validQty || !validCost} onClick={() => submit(qtyN, true)}>
+          Add stock
+        </Button>
+        <Button size="sm" variant="secondary" loading={loading} disabled={!validQty} onClick={() => submit(-qtyN, false)}>
+          Remove (correction)
+        </Button>
       </div>
     </SectionCard>
   );

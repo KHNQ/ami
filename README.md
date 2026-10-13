@@ -125,7 +125,11 @@ PATCH  /products/:id/price                admin  { y_cents }
 PATCH  /products/:id/status               admin  { status }
 POST   /products/:id/warehouse-cost       admin  { x_cents }
 GET    /products/:id/warehouse-cost
-PATCH  /products/:id/stock                admin  { delta }
+PATCH  /products/:id/stock                catalogue.write  { delta, cost_cents? }
+                                                   cost_cents = per-unit cost of the batch being ADDED (delta > 0 only);
+                                                   it becomes the product's warehouse cost in the same step, and is
+                                                   appended to the cost history unless it equals the current cost.
+                                                   A negative delta (count correction) takes no cost.
 
 POST   /purchases                         { product_id, redeem_code?, discount_cents? }
 GET    /purchases                         your own purchase history

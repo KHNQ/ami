@@ -92,6 +92,6 @@ productRoutes.post("/:id/warehouse-cost", requireAuth, requirePermission("catalo
 });
 
 productRoutes.patch("/:id/stock", requireAuth, requirePermission("catalogue.write"), async (c) => {
-  const { delta } = await c.req.json();
-  return c.json(productService.adjustStock(c.req.param("id"), delta, c.get("userId")));
+  const { delta, cost_cents } = await c.req.json();
+  return c.json(productService.adjustStock(c.req.param("id"), delta, c.get("userId"), { costCents: cost_cents }));
 });

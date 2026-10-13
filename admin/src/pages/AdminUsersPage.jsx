@@ -89,7 +89,10 @@ export default function AdminUsersPage() {
                       <ShieldPlus size={12} /> Make admin
                     </Link>
                   )}
+                  {/* Locking a STAFF account is root's call (the API refuses anyone else),
+                      so the button is not offered to a scope that would only be refused. */}
                   {can("users.write") &&
+                    (u.role !== "admin" || can("admins.manage")) &&
                     (u.status === "active" ? (
                       <button onClick={() => setStatus(u.id, "suspended")} className="text-[11px] font-semibold text-amber-400">
                         Suspend

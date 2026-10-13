@@ -1328,6 +1328,7 @@
     "detailMetaDesc": "یک خرید و مدارکش.",
     "allOrders": "همهٔ سفارش‌ها",
     "amountPaid": "مبلغ پرداخت‌شده",
+    "orderValue": "ارزش سفارش",
     "discount": "تخفیف",
     "refunded": "بازپرداخت‌شده",
     "orderId": "شناسهٔ سفارش",

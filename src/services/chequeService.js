@@ -17,6 +17,16 @@ const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 const ALLOWED_IMAGE_MIME = ["image/jpeg", "image/png", "image/webp", "image/heic", "application/pdf"];
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
+// The regex only checks the SHAPE. "2026-13-45" and "2026-02-30" have it too,
+// and a cheque that "falls due" on a day that does not exist would never be
+// reminded about, never be reported overdue and never sort sensibly.
+function isRealDate(value) {
+  if (typeof value !== "string" || !DATE_RE.test(value)) return false;
+  const [y, m, d] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
+}
+
 function decodeImage(dataUrl) {
   if (!dataUrl) return { imageMime: undefined, imageBytes: undefined };
   const match = /^data:([^;]+);base64,(.+)$/s.exec(dataUrl);
@@ -46,13 +56,20 @@ export const chequeService = {
     if (!Number.isInteger(amountCents) || amountCents <= 0) {
       throw Errors.badRequest("amount_cents must be a positive integer");
     }
-    if (!body.due_date || !DATE_RE.test(body.due_date)) {
-      throw Errors.badRequest("due_date is required, as YYYY-MM-DD", "invalid_due_date");
+    if (!isRealDate(body.due_date)) {
+      throw Errors.badRequest("due_date is required, as a real calendar date YYYY-MM-DD", "invalid_due_date");
     }
+    // Shape of the request first, state of the order second: a malformed
+    // upload is a 400 whatever the order's balance happens to be.
+    const { imageMime, imageBytes } = decodeImage(body.image_data_url);
 
     // Cheques plus the down payment must not promise more than the order is
     // worth. This catches a misplaced decimal at entry time, which is a far
     // likelier failure than anything adversarial.
+    // A refunded sale no longer exists, so it cannot acquire new promises to pay.
+    if (tx.status === "refunded") {
+      throw Errors.unprocessable("This order has been refunded", "order_refunded");
+    }
     const existing = db.cheques.totalsByTransaction(transactionId);
     const committed = tx.amount_received_cents + existing.total_cents + amountCents;
     if (committed > tx.y_at_sale_cents) {
@@ -62,8 +79,6 @@ export const chequeService = {
         { committedCents: committed, orderValueCents: tx.y_at_sale_cents }
       );
     }
-
-    const { imageMime, imageBytes } = decodeImage(body.image_data_url);
 
     const cheque = db.cheques.create({
       transactionId,
@@ -143,8 +158,8 @@ export const chequeService = {
     if (cheque.status !== "pending") {
       throw Errors.unprocessable("Only a pending cheque can be edited", "cheque_not_pending");
     }
-    if (body.due_date !== undefined && !DATE_RE.test(body.due_date)) {
-      throw Errors.badRequest("due_date must be YYYY-MM-DD", "invalid_due_date");
+    if (body.due_date !== undefined && !isRealDate(body.due_date)) {
+      throw Errors.badRequest("due_date must be a real calendar date YYYY-MM-DD", "invalid_due_date");
     }
     if (body.amount_cents !== undefined && (!Number.isInteger(body.amount_cents) || body.amount_cents <= 0)) {
       throw Errors.badRequest("amount_cents must be a positive integer");
@@ -179,6 +194,11 @@ export const chequeService = {
     const cheque = this.get(id);
     if (!STATUSES.includes(status)) throw Errors.badRequest(`status must be one of: ${STATUSES.join(", ")}`);
     if (cheque.status === status) return cheque;
+    // Cash cannot arrive against an order that has been unwound -- it would be
+    // counted as collected on a sale whose commission is already reversed.
+    if (status === "cleared" && db.transactions.get(cheque.transaction_id)?.status === "refunded") {
+      throw Errors.unprocessable("This order has been refunded, so the cheque cannot be cleared", "order_refunded");
+    }
     if (cheque.status !== "pending") {
       throw Errors.unprocessable(
         `This cheque is already ${cheque.status} and cannot be changed`,

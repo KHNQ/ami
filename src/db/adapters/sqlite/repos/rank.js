@@ -77,6 +77,14 @@ export function makeRankBonusPeriodsRepo(raw) {
           .get(productId, periodStart, periodEnd) || null
       );
     },
+    /** Any funded period for this product whose range intersects [periodStart, periodEnd). */
+    findOverlapping(productId, periodStart, periodEnd) {
+      return (
+        raw
+          .query(`SELECT * FROM rank_bonus_periods WHERE product_id = ? AND period_start < ? AND period_end > ? LIMIT 1`)
+          .get(productId, periodEnd, periodStart) || null
+      );
+    },
     listByProduct(productId, { limit = 50, offset = 0 } = {}) {
       return raw
         .query(`SELECT * FROM rank_bonus_periods WHERE product_id = ? ORDER BY period_start DESC, rowid DESC LIMIT ? OFFSET ?`)

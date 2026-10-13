@@ -32,7 +32,11 @@ export function OrderDetailView({ tx, productName, ledgerEntries, showInternals 
         </div>
 
         <div className="mt-3 divide-y divide-surface/6 border-t border-surface/6 pt-1">
-          <Row label="Amount paid" value={money(tx.y_at_sale_cents)} strong />
+          {/* Received, not worth: an instalment order is worth more than has been paid so far. */}
+          <Row label="Amount paid" value={money(tx.amount_received_cents ?? tx.y_at_sale_cents)} strong />
+          {tx.amount_received_cents != null && tx.amount_received_cents < tx.y_at_sale_cents && (
+            <Row label="Order value" value={money(tx.y_at_sale_cents)} />
+          )}
           {tx.discount_cents > 0 && <Row label="Discount" value={`-${money(tx.discount_cents)}`} />}
           {tx.refunded_amount_cents > 0 && <Row label="Refunded" value={money(tx.refunded_amount_cents)} />}
           <Row label="Order ID" value={<span className="font-mono text-[11.5px]">{tx.id.slice(0, 18)}…</span>} />

@@ -163,10 +163,17 @@ function auditTransactions(problems) {
     if (tx.refunded_amount_cents > tx.y_at_sale_cents) {
       problems.push(`tx ${tx.id}: refunded ${tx.refunded_amount_cents} exceeds sale price ${tx.y_at_sale_cents}`);
     }
+    // A refund can only return what was COLLECTED (a part-paid installment order
+    // is worth more than has been paid), so "fully refunded" means everything
+    // collected has gone back -- which is the order value for any order paid in
+    // full, and less for one still owing instalments.
+    if (tx.refunded_amount_cents > tx.amount_received_cents) {
+      problems.push(`tx ${tx.id}: refunded ${tx.refunded_amount_cents} exceeds the ${tx.amount_received_cents} actually collected`);
+    }
     const expectedStatus =
       tx.refunded_amount_cents === 0
         ? "completed"
-        : tx.refunded_amount_cents >= tx.y_at_sale_cents
+        : tx.refunded_amount_cents >= tx.amount_received_cents
           ? "refunded"
           : "partially_refunded";
     if (tx.status !== expectedStatus) {
@@ -255,10 +262,15 @@ function auditCommissionLedger(problems) {
       }
       continue;
     }
-    if (moved.net !== owed) {
+    // An entry settled in CASH never credited a wallet, so if its sale is later
+    // refunded the only wallet movement is the clawback debit: the earner now
+    // owes that amount back, recorded as a (deliberately allowed) negative
+    // balance. Wallet-paid entries must net to exactly what is still owed.
+    const expectedNet = e.paid_method === "manual" ? -e.clawed_back_cents : owed;
+    if (moved.net !== expectedNet) {
       problems.push(
         `ledger entry ${e.id}: wallet received ${moved.net} but the entry owes ${owed} ` +
-          `(earned ${e.amount_cents}, clawed back ${e.clawed_back_cents}, status ${e.status})`
+          `(earned ${e.amount_cents}, clawed back ${e.clawed_back_cents}, status ${e.status}, paid ${e.paid_method || "n/a"})`
       );
     }
   }

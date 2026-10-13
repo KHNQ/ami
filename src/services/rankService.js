@@ -84,9 +84,31 @@ export const rankService = {
   // Idempotent: re-running for the same product+range returns the
   // already-funded period rather than double-funding it (UNIQUE constraint
   // backs this, but check first so this reads cleanly as a safe retry).
-  fundPeriodPool({ productId, periodStart, periodEnd }) {
+  //
+  // Ranges are validated and normalised first. Two different-but-overlapping
+  // ranges would each total the same sales into their own pool, paying the same
+  // profit out twice -- so an overlap with an already-funded period is refused,
+  // and only the identical range is the idempotent "safe retry".
+  fundPeriodPool({ productId, periodStart: rawStart, periodEnd: rawEnd }) {
+    const startMs = Date.parse(rawStart);
+    const endMs = Date.parse(rawEnd);
+    if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) {
+      throw Errors.badRequest("period_start and period_end must be valid dates", "invalid_period");
+    }
+    if (startMs >= endMs) throw Errors.badRequest("period_start must be before period_end", "invalid_period");
+    const periodStart = new Date(startMs).toISOString();
+    const periodEnd = new Date(endMs).toISOString();
+
     const existing = db.rankBonusPeriods.getByProductAndRange(productId, periodStart, periodEnd);
     if (existing) return existing;
+    const overlap = db.rankBonusPeriods.findOverlapping(productId, periodStart, periodEnd);
+    if (overlap) {
+      throw Errors.unprocessable(
+        `This range overlaps an already-funded period (${overlap.period_start} to ${overlap.period_end}); its sales are already counted`,
+        "period_overlaps",
+        { periodId: overlap.id }
+      );
+    }
 
     const plan = db.commissionPlans.getByProductId(productId);
     if (!plan) throw Errors.notFound("No commission plan for this product");

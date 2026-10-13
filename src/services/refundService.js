@@ -11,7 +11,16 @@ export const refundService = {
     if (!tx) throw Errors.notFound("Transaction not found");
     if (tx.status === "refunded") throw Errors.unprocessable("Transaction is already fully refunded", "already_refunded");
 
-    const remainingRefundable = tx.y_at_sale_cents - tx.refunded_amount_cents;
+    // What can be handed back is what was actually COLLECTED, not what the order
+    // is worth. A part-paid installment order is worth more than the customer
+    // has paid so far, and refunding the order value would credit their wallet
+    // with money that never arrived. (For a wallet purchase and a paid-in-full
+    // walk-in the two figures are the same.)
+    const collectedCents = tx.amount_received_cents;
+    const remainingRefundable = collectedCents - tx.refunded_amount_cents;
+    if (remainingRefundable <= 0) {
+      throw Errors.unprocessable("Nothing has been collected on this order, so there is nothing to refund", "nothing_to_refund");
+    }
     const refundAmountCents = amountCents ?? remainingRefundable;
     if (!Number.isInteger(refundAmountCents) || refundAmountCents <= 0) {
       throw Errors.badRequest("amountCents must be a positive integer");
@@ -23,11 +32,17 @@ export const refundService = {
       );
     }
 
-    // Fraction of the ORIGINAL sale being refunded by this call -- used to
-    // proportionally claw back everything that scaled off that same sale
-    // (per-level commissions, reserve cut), consistently with Invariant 6
-    // (round down, residual favors Trex / stays un-clawed-back).
-    const ratioBp = Math.floor((refundAmountCents * 10000) / tx.y_at_sale_cents);
+    // The refund that returns everything collected unwinds the sale, and an
+    // unwound sale must leave nothing behind -- no commission, no reserve cut.
+    // Proportional rounding (always down, Invariant 6) would otherwise leave a
+    // few cents with the upline on every split refund, so the closing refund
+    // reverses whatever is still outstanding instead of applying a ratio.
+    const closesTheSale = refundAmountCents === remainingRefundable;
+
+    // Fraction of what was collected that this call returns -- used to
+    // proportionally claw back everything that scaled off the sale (per-level
+    // commissions, reserve cut) for a PARTIAL refund.
+    const ratioBp = Math.floor((refundAmountCents * 10000) / collectedCents);
 
     return db.transaction(() => {
       const entries = db.ledger.listByTransaction(transactionId);
@@ -41,8 +56,7 @@ export const refundService = {
         if (entry.status === "quota_applied") continue;
         const payable = entry.amount_cents - entry.clawed_back_cents;
         if (payable <= 0) continue;
-        let clawbackCents = bpOf(entry.amount_cents, ratioBp);
-        clawbackCents = Math.min(clawbackCents, payable);
+        let clawbackCents = closesTheSale ? payable : Math.min(bpOf(entry.amount_cents, ratioBp), payable);
         if (clawbackCents <= 0) continue;
 
         const newClawedTotal = entry.clawed_back_cents + clawbackCents;
@@ -68,7 +82,11 @@ export const refundService = {
         clawbacks.push({ ledger_entry_id: entry.id, node_id: entry.node_id, clawed_back_cents: clawbackCents });
       }
 
-      const reserveClawbackCents = Math.min(bpOf(tx.reserve_amount_cents, ratioBp), tx.reserve_amount_cents);
+      const reserveLeft = tx.reserve_amount_cents - db.reserve.debitedForTransaction(transactionId);
+      const reserveClawbackCents = Math.max(
+        0,
+        closesTheSale ? reserveLeft : Math.min(bpOf(tx.reserve_amount_cents, ratioBp), reserveLeft)
+      );
       if (reserveClawbackCents > 0) {
         db.reserve.debit(reserveClawbackCents, { transactionId, note: "refund clawback" });
       }
@@ -82,7 +100,7 @@ export const refundService = {
       });
 
       const newRefundedTotal = tx.refunded_amount_cents + refundAmountCents;
-      const newStatus = newRefundedTotal >= tx.y_at_sale_cents ? "refunded" : "partially_refunded";
+      const newStatus = closesTheSale ? "refunded" : "partially_refunded";
       const updatedTx = db.transactions.applyRefund(transactionId, { refundedAmountCents: newRefundedTotal, status: newStatus });
 
       db.logs.record({

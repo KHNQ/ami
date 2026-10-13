@@ -1323,6 +1323,7 @@
     "detailMetaDesc": "One purchase and its documents.",
     "allOrders": "All orders",
     "amountPaid": "Amount paid",
+    "orderValue": "Order value",
     "discount": "Discount",
     "refunded": "Refunded",
     "orderId": "Order ID",

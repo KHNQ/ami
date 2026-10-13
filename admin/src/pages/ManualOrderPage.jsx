@@ -1,3 +1,4 @@
+import { PageTitle } from "@shared/components/layout/PageTitle.jsx";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Plus, Trash2, Search, Receipt, FileText, Link2, AlertTriangle } from "lucide-react";
@@ -140,6 +141,7 @@ export default function ManualOrderPage() {
   if (result) {
     return (
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
+        <PageTitle title="Admin · New walk-in" />
         <Card className="p-6">
           <div className="mb-4 flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gradient">
@@ -209,6 +211,7 @@ export default function ManualOrderPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
+      <PageTitle title="Admin · New walk-in" />
       <div>
         <h2 className="text-[20px] font-extrabold text-fg">Record a walk-in sale</h2>
         <p className="text-[13px] text-fg/45">
@@ -484,7 +487,9 @@ export default function ManualOrderPage() {
       {/* 5. Submit */}
       <Card className="p-4">
         <Input label="Note (internal)" value={note} onChange={(e) => setNote(e.target.value)} />
-        {can("users.write") && (
+        {/* Root only, like the API: `users.write` is also held by the people-scope, who
+            would see the box and then be refused. `admins.manage` is root's alone. */}
+        {can("admins.manage") && (
           <label className="mt-3 flex items-start gap-2.5 text-[12.5px] text-fg/55">
             <input type="checkbox" checked={override} onChange={(e) => setOverride(e.target.checked)} className="mt-0.5" />
             <span>

@@ -4,6 +4,7 @@ import { secureHeaders } from "hono/secure-headers";
 import { logger } from "hono/logger";
 import { config } from "./config.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { jsonObjectBody } from "./middleware/jsonBody.js";
 
 import { authRoutes } from "./routes/auth.js";
 import { profileRoutes } from "./routes/profile.js";
@@ -42,6 +43,7 @@ export function buildApp() {
   if (process.env.NODE_ENV !== "test") app.use("*", logger());
   app.use("*", cors({ origin: config.corsOrigins }));
   app.use("*", secureHeaders());
+  app.use("*", jsonObjectBody);
   app.onError(errorHandler);
 
   app.get("/health", (c) => c.json({ ok: true, service: "trex-backend" }));

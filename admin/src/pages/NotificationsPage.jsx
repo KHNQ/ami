@@ -1,3 +1,4 @@
+import { PageTitle } from "@shared/components/layout/PageTitle.jsx";
 import { useState } from "react";
 import { RefreshCw, Send } from "lucide-react";
 import { adminApi } from "../lib/adminApi.js";
@@ -45,6 +46,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="flex flex-col gap-4">
+      <PageTitle title="Admin · Messages" />
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex-1">
           <h2 className="text-[20px] font-extrabold text-fg">Messages</h2>

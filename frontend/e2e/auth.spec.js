@@ -4,13 +4,17 @@ import { signupNewUser, login, logout, uniqueEmail } from "./helpers.js";
 test.describe("Auth", () => {
   test("sign up, sign out, sign back in", async ({ page }) => {
     const { email, password, name } = await signupNewUser(page);
-    await expect(page.getByText(name)).toBeVisible();
+    // The signed-in name is shown on the profile page, not on the storefront home.
+    await page.goto("/profile");
+    await expect(page.getByText(name).first()).toBeVisible();
 
     await logout(page);
     await expect(page).toHaveURL(/\/(login)?$/);
 
     await login(page, email, password);
-    await expect(page.getByText(name)).toBeVisible();
+    // The signed-in name is shown on the profile page, not on the storefront home.
+    await page.goto("/profile");
+    await expect(page.getByText(name).first()).toBeVisible();
   });
 
   test("rejects an unknown login with a visible error, no navigation", async ({ page }) => {

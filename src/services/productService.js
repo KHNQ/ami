@@ -229,9 +229,24 @@ export const productService = {
     return db.warehouseCost.listByProduct(id, opts);
   },
 
-  adjustStock(id, delta, actorUserId) {
+  // `costCents` is the per-unit warehouse cost of the batch being added. Stock
+  // and cost are entered together because the person receiving a delivery is
+  // the one who knows what it cost: stock that arrives at a new price must move
+  // the recorded cost with it, in the same step, or the next sale is margin-
+  // checked against a cost that is no longer true. Only meaningful when adding
+  // -- removing units (a count correction) has no price.
+  adjustStock(id, delta, actorUserId, { costCents } = {}) {
     const current = this.get(id);
     if (!Number.isInteger(delta)) throw Errors.badRequest("delta must be an integer");
+    const hasCost = costCents !== undefined && costCents !== null;
+    if (hasCost) {
+      if (!Number.isInteger(costCents) || costCents < 0) {
+        throw Errors.badRequest("cost_cents must be a non-negative integer", "invalid_cost");
+      }
+      if (delta <= 0) {
+        throw Errors.badRequest("cost_cents only applies when adding stock", "cost_requires_added_stock");
+      }
+    }
     // Stock is a physical count -- a negative one is never meaningful, and
     // silently allowing it would let the storefront keep selling a product
     // the warehouse has already run out of.
@@ -242,8 +257,24 @@ export const productService = {
         { stock_count: current.stock_count, delta }
       );
     }
-    const p = db.products.adjustStock(id, delta);
-    db.logs.record({ actorUserId, action: "product.adjust_stock", entityType: "product", entityId: id, meta: { delta } });
+    // A cost equal to the one already recorded is not a change; appending it
+    // would only pad the cost history with duplicates.
+    const costChanged = hasCost && costCents !== current.current_x_cents;
+    const p = db.transaction(() => {
+      const updated = db.products.adjustStock(id, delta);
+      if (costChanged) {
+        db.warehouseCost.append({ productId: id, xCents: costCents, createdBy: actorUserId });
+        return db.products.setCurrentX(id, costCents) ?? db.products.get(id);
+      }
+      return updated;
+    });
+    db.logs.record({
+      actorUserId,
+      action: "product.adjust_stock",
+      entityType: "product",
+      entityId: id,
+      meta: { delta, ...(hasCost ? { costCents, costChanged, previousCostCents: current.current_x_cents } : {}) },
+    });
     return this.hydrate(p);
   },
 };

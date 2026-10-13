@@ -624,9 +624,16 @@ export const salesService = {
       // The agreement's own state follows its schedule rather than being set
       // by hand: nothing left to pay means completed, and the next due date
       // is always the earliest outstanding row.
+      //
+      // But only an agreement that is still running can complete. One that was
+      // cancelled or defaulted stays that way when the housekeeping that follows
+      // (writing off or waiving what is left) empties its schedule -- otherwise a
+      // customer who walked away reads as one who paid in full.
+      const agreement = db.salesAgreements.get(instalment.agreement_id);
+      const finished = ["cancelled", "defaulted", "completed"].includes(agreement.status);
       db.salesAgreements.update(instalment.agreement_id, {
         nextDueOn: outstanding[0]?.due_on || null,
-        status: outstanding.length === 0 ? "completed" : undefined,
+        status: outstanding.length === 0 && !finished ? "completed" : undefined,
       });
 
       db.logs.record({

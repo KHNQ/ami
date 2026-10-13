@@ -1328,6 +1328,7 @@
     "detailMetaDesc": "Un achat et ses documents.",
     "allOrders": "Toutes les commandes",
     "amountPaid": "Montant payé",
+    "orderValue": "Valeur de la commande",
     "discount": "Remise",
     "refunded": "Remboursé",
     "orderId": "N° de commande",

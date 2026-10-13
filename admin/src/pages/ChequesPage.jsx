@@ -1,3 +1,4 @@
+import { PageTitle } from "@shared/components/layout/PageTitle.jsx";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Image as ImageIcon, Check, X } from "lucide-react";
@@ -43,6 +44,7 @@ export default function ChequesPage() {
 
   return (
     <div className="flex flex-col gap-4">
+      <PageTitle title="Admin · Cheques" />
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex-1">
           <h2 className="text-[20px] font-extrabold text-fg">Cheques</h2>

@@ -400,6 +400,9 @@ function QuotaCard({ nodeId }) {
   const { data, loading, error } = useAsync(() => api.getNodeQuota(nodeId), [nodeId]);
   if (loading) return <Skeleton className="mt-3 h-24" />;
   if (error || !data) return null;
+  // No tier reached and none ahead means this product runs no quota programme at
+  // all; "No tier yet -- all configured tiers completed" would be a contradiction.
+  if (!data.current_tier && !data.next_tier) return null;
   const pct = data.next_tier
     ? Math.min(100, Math.round((data.accumulated_cents / data.next_tier.quota_target_cents) * 100))
     : 100;

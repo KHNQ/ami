@@ -1332,6 +1332,7 @@
     "detailMetaDesc": "عملية شراء واحدة ومستنداتها.",
     "allOrders": "كل الطلبات",
     "amountPaid": "المبلغ المدفوع",
+    "orderValue": "قيمة الطلب",
     "discount": "الخصم",
     "refunded": "المُسترَد",
     "orderId": "معرّف الطلب",

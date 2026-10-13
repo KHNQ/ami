@@ -41,7 +41,10 @@ export const adminApi = {
   updateProduct: (id, body) => patch(`/products/${id}`, body),
   updateProductPrice: (id, body) => patch(`/products/${id}/price`, body),
   updateProductStatus: (id, status) => patch(`/products/${id}/status`, { status }),
-  adjustStock: (id, delta) => patch(`/products/${id}/stock`, { delta }),
+  // `costCents` is the per-unit cost of the batch being added; omit it for a
+  // count correction (removing stock has no price).
+  adjustStock: (id, delta, costCents) =>
+    patch(`/products/${id}/stock`, costCents === undefined ? { delta } : { delta, cost_cents: costCents }),
   appendWarehouseCost: (id, body) => post(`/products/${id}/warehouse-cost`, body),
   getWarehouseCostHistory: (id) => get(`/products/${id}/warehouse-cost`),
   productImageUrl: (product) => product?.specs?.image_url ?? null,

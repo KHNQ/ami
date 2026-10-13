@@ -1,3 +1,4 @@
+import { isValidEmail } from "../lib/validation.js";
 import { db } from "../db/index.js";
 import { Errors } from "../lib/errors.js";
 import { hashPassword } from "../lib/auth.js";
@@ -25,6 +26,17 @@ export const adminService = {
     // suspend *other* admins.
     if (userId === actorUserId && status !== "active") {
       throw Errors.badRequest("You cannot suspend or ban your own account", "cannot_lock_self_out");
+    }
+    // Locking a STAFF account is a root decision. The users scope may suspend
+    // customers, but if it could also suspend admins it could suspend the one
+    // account able to remove its own access -- a sub-admin silencing the root.
+    if (user.role === "admin" && userId !== actorUserId) {
+      // A real account only: every HTTP caller is one. An internal job with no
+      // user behind it (the id is not a row) is trusted, as it always was.
+      const actor = db.users.findById(actorUserId);
+      if (actor && staffRoleOf(actor) !== ROOT) {
+        throw Errors.forbidden("Only a root admin can suspend, ban or reinstate a staff account", "staff_requires_root");
+      }
     }
     const updated = db.users.updateStatus(userId, status);
     db.logs.record({ actorUserId, action: "admin.user.set_status", entityType: "user", entityId: userId, meta: { status } });
@@ -94,6 +106,7 @@ export const adminService = {
   // is a stronger statement than a confirmation link.
   async createAdmin({ email, password, name, staffRole }, actorUserId) {
     if (!email || !password || !name) throw Errors.badRequest("email, password and name are required");
+    if (!isValidEmail(email)) throw Errors.badRequest("email is not a valid address", "invalid_email");
     if (password.length < 8) throw Errors.badRequest("password must be at least 8 characters");
     if (!isValidStaffRole(staffRole)) {
       throw Errors.badRequest(

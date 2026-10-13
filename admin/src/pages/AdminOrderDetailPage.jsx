@@ -20,7 +20,9 @@ export default function AdminOrderDetailPage() {
   const { data: product } = useAsync(() => (data ? api.getProduct(data.product_id) : Promise.resolve(null)), [data?.product_id]);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const remaining = data ? data.y_at_sale_cents - data.refunded_amount_cents : 0;
+  // What can still be handed back is what was COLLECTED, not what the order is
+  // worth: a part-paid instalment order is worth more than has been paid.
+  const remaining = data ? data.amount_received_cents - data.refunded_amount_cents : 0;
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col">

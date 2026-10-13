@@ -344,6 +344,12 @@ export function makeReserveRepo(raw) {
         .run(id, amountCents, bal, transactionId || null, note || null, new Date().toISOString());
       return bal;
     },
+    /** How much of one sale's reserve cut has already been handed back (refund clawbacks). */
+    debitedForTransaction(transactionId) {
+      return raw
+        .query(`SELECT COALESCE(SUM(amount_cents), 0) AS n FROM reserve_ledger_entries WHERE transaction_id = ? AND type = 'debit'`)
+        .get(transactionId).n;
+    },
     listLedger({ limit = 50, offset = 0 } = {}) {
       return raw.query(`SELECT * FROM reserve_ledger_entries ORDER BY created_at DESC, rowid DESC LIMIT ? OFFSET ?`).all(limit, offset);
     },

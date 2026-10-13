@@ -1,3 +1,4 @@
+import { PageTitle } from "@shared/components/layout/PageTitle.jsx";
 import { useState } from "react";
 import { RotateCcw, Save } from "lucide-react";
 import { adminApi } from "../lib/adminApi.js";
@@ -17,11 +18,12 @@ import { ErrorState } from "@shared/components/ui/ErrorState.jsx";
 // so adding a setting server-side surfaces it automatically with its label,
 // description, type and default -- no matching frontend change to forget.
 
-function Toggle({ value, onChange, disabled }) {
+function Toggle({ value, onChange, disabled, label }) {
   return (
     <button
       type="button"
       role="switch"
+      aria-label={label}
       aria-checked={value}
       disabled={disabled}
       onClick={() => onChange(!value)}
@@ -92,6 +94,7 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col gap-5">
+      <PageTitle title="Admin · Settings" />
       <div className="flex items-center gap-3">
         <div className="flex-1">
           <h2 className="text-[20px] font-extrabold text-fg">Site settings</h2>
@@ -138,6 +141,7 @@ export default function SettingsPage() {
               </button>
             )}
             <Toggle
+              label={s.label}
               value={valueOf(s)}
               disabled={!canEdit(s) || s.env_disabled}
               onChange={(v) => setDraft((d) => ({ ...d, [s.key]: v }))}

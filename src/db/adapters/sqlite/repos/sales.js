@@ -201,7 +201,10 @@ export function makeSalesAgreementsRepo(raw) {
         .run(
           fields.status ?? current.status,
           fields.adminNote ?? current.admin_note,
-          fields.nextDueOn ?? current.next_due_on,
+          // `null` here is a real value -- "nothing is due any more" -- and `??`
+          // would silently turn it back into the old date. A completed agreement
+          // kept advertising a next payment that no longer existed.
+          fields.nextDueOn !== undefined ? fields.nextDueOn : current.next_due_on,
           fields.startsOn ?? current.starts_on,
           fields.endsOn ?? current.ends_on,
           now,

@@ -1328,6 +1328,7 @@
     "detailMetaDesc": "Un acquisto e i suoi documenti.",
     "allOrders": "Tutti gli ordini",
     "amountPaid": "Importo pagato",
+    "orderValue": "Valore dell'ordine",
     "discount": "Sconto",
     "refunded": "Rimborsato",
     "orderId": "ID ordine",
